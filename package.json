@@ -1,0 +1,19 @@
+{
+  "name": "deal-ops-site",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "license": "Apache-2.0",
+  "scripts": {
+    "toolkit:fetch": "node scripts/fetch-toolkit.mjs",
+    "site:build": "rolldown site-src/site.js -f iife -m -o site/site.js",
+    "site:check": "node scripts/check-site.mjs",
+    "site:preview": "node scripts/site-preview.mjs 4180",
+    "lint": "oxlint --deny-warnings --ignore-pattern site/site.js --ignore-pattern vendor"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "oxlint": "1.88.0",
+    "rolldown": "1.2.14"
+  }
+}

@@ -1,0 +1,22 @@
+name: CI
+on:
+  push:
+    branches: [main, release]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Lint (site-src, scripts)
+        run: npm run lint
+      - name: Public Toolkit at the commit in toolkit.ref (app sentences, labels, release notes)
+        run: npm run toolkit:fetch
+      - name: Website checks (CSP markup, links, app sentences, P9 figures, script build and size, clips ≤ 5 s)
+        run: npm run site:check
