@@ -46,8 +46,8 @@ function menuClose() {
   })
 }
 
-/** Hero: the phrase turns over letter by letter every 2 s, once through and back to the first, then stays still. Never
-    under reduced motion. The matching hero panel lifts with each phrase. */
+/** Hero: the visible headline loops every 2 s. Offscreen, hidden tabs and reduced motion stop the timer;
+    returning to the title resumes from its current phrase. The matching panel lifts with each phrase. */
 function rotator() {
   const box = document.querySelector('[data-rotator]')
   if (!box) return
@@ -79,12 +79,13 @@ function rotator() {
   // letters are numbered across the whole phrase, so the stagger runs on from the verb into the rest
   for (const item of items) item.querySelectorAll('.ch').forEach((ch, i) => ch.classList.add('d' + Math.min(i, 19)))
   let at = 0
-  let turns = 0
   items[0].classList.add('is-on')
-  // after the entrance, the first panel lifts; once the phrase is back at the start, all three rest level
-  if (moving()) setTimeout(() => lightPanel(0), 1600)
-  const timer = setInterval(() => {
-    if (document.hidden || !moving()) return
+  if (!('IntersectionObserver' in window)) return
+  let visible = false
+  let timer = 0
+  let entrance = 0
+  function turn() {
+    if (!visible || document.hidden || !moving()) return
     const from = items[at]
     at = (at + 1) % items.length
     const to = items[at]
@@ -94,11 +95,26 @@ function rotator() {
     to.classList.add('is-on', 'is-in')
     setTimeout(() => from.classList.remove('is-out'), 220)
     lightPanel(at)
-    if (++turns === items.length) {
+  }
+  function update() {
+    if (!visible || document.hidden || !moving()) {
       clearInterval(timer)
-      setTimeout(() => lightPanel(-1), 2400)
+      clearTimeout(entrance)
+      timer = 0
+      items.forEach((item) => item.classList.remove('is-in', 'is-out'))
+      lightPanel(-1)
+      return
     }
-  }, 2000)
+    if (timer) return
+    entrance = setTimeout(() => lightPanel(at), 1600)
+    timer = setInterval(turn, 2000)
+  }
+  new IntersectionObserver(([entry]) => {
+    visible = entry.isIntersecting
+    update()
+  }).observe(box)
+  document.addEventListener('visibilitychange', update)
+  onMotionChange(update)
 }
 
 /** Hero illustration: the panel for the phrase the headline shows lifts a little (the rotator calls this). A panel can

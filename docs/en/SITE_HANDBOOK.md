@@ -1,6 +1,6 @@
 # Project website handbook
 
-English handbook for the project website, v1.12 · 2026-11-03 (Inbox v0.1.1 integrated with independent illustrations; release checks) · v1.11 · 2026-11-03 (R18: restore the live native deck; illustrations play independently of scrolling) · v1.10 · 2026-11-03 (R17: headline changes every2s, faster letter entrance, no hover hold) · v1.9 · 2026-11-03 (R16: fixed stops with immediately interruptible native scrolling; §4.3) · v1.8 · 2026-11-03 (R15: stable reading intervals, gentler hand-overs and synchronised steps; §4.3) · v1.7 · 2026-11-03 (R14: seven data-backed step illustrations, looping while visible; §3.4, §4.3, §5) · v1.6, 2026-11-03 (one global nav and a module sub-nav, a fuller overview, the Inbox hero as a three-step flow, use cases as a grid; v1.5 several pages: `/`, `/toolkit/`, `/inbox/`, `/inbox/demo/`, see §2.0, §4.6, §5.1, §6, §9; v1.4.1 release steps: public `main` first, then fast-forward `release`; v1.4 own repository; v1.3 FAQ section, v1.2 and v1.1 earlier). Live at https://deal-ops-toolkit-site.vercel.app (source in `site/`). This is the basis for every later change to the site: when the design or a method changes, update this handbook and add a line to §9.
+English handbook for the project website, v1.13 - 2026-11-03 (R19: visible headline loops and deep-link return lifecycle) - v1.12 · 2026-11-03 (Inbox v0.1.1 integrated with independent illustrations; release checks) · v1.11 · 2026-11-03 (R18: restore the live native deck; illustrations play independently of scrolling) · v1.10 · 2026-11-03 (R17: headline changes every2s, faster letter entrance, no hover hold) · v1.9 · 2026-11-03 (R16: fixed stops with immediately interruptible native scrolling; §4.3) · v1.8 · 2026-11-03 (R15: stable reading intervals, gentler hand-overs and synchronised steps; §4.3) · v1.7 · 2026-11-03 (R14: seven data-backed step illustrations, looping while visible; §3.4, §4.3, §5) · v1.6, 2026-11-03 (one global nav and a module sub-nav, a fuller overview, the Inbox hero as a three-step flow, use cases as a grid; v1.5 several pages: `/`, `/toolkit/`, `/inbox/`, `/inbox/demo/`, see §2.0, §4.6, §5.1, §6, §9; v1.4.1 release steps: public `main` first, then fast-forward `release`; v1.4 own repository; v1.3 FAQ section, v1.2 and v1.1 earlier). Live at https://deal-ops-toolkit-site.vercel.app (source in `site/`). This is the basis for every later change to the site: when the design or a method changes, update this handbook and add a line to §9.
 
 ## 1. What the site is for
 
@@ -27,7 +27,7 @@ English handbook for the project website, v1.12 · 2026-11-03 (Inbox v0.1.1 inte
 | # | Section | Background | Content | Motion |
 |---|---|---|---|---|
 | 1 | Navigation | Floating glass capsules, then the sub-nav | Global nav (§2.0): Deal Ops · Toolkit · Inbox · How we build · FAQ · GitHub; under the hero the sub-nav: Deal Ops Toolkit · How it works · Why trust it · How it was built · Toolkit FAQ · Open the app | A pill slides to the hovered link; both bars turn dark over dark sections |
-| 2 | Hero | Light, open, no container | Headline "Reconcile an SPV / to the penny.", the grey verb turning to Allocate and Distribute and back; lead paragraph; two buttons | Focus-in entrance; the verb turns letter by letter every 2 s, once round, then stops |
+| 2 | Hero | Light, open, no container | Headline "Reconcile an SPV / to the penny.", the grey verb turning to Allocate and Distribute and back; lead paragraph; two buttons | Focus-in entrance; the verb turns letter by letter every 2 s, continuously while visible |
 | 3 | Hero illustration | Full-width soft glow fading out above and below | Three panels: bank statement, closing allocation, exit waterfall (§4.2) | Panels rise in turn; bars grow; Review → Confirmed; the panel for the headline's verb lifts |
 | 4 | Light to dark | Hard edge, no band (2026-10-30) | none ("How it works" for screen readers only); 96px of space at the top of the dark section (56px on phones) | — |
 | 5 | Three-step deck | Dark full-width band | Three cards: text and an animated illustration from sample data; step labels with progress bars | Pinned; each card slides up over the last (§4.3) |
@@ -79,8 +79,8 @@ Light or dark follows the device setting; there is no switch on the page.
 |---|---|
 | Two curves | entrances `cubic-bezier(0.22, 1, 0.36, 1)`, hovers `cubic-bezier(0.4, 0, 0.2, 1)` |
 | Durations | large entrances 0.9–1.1 s; hovers 0.18–0.24 s; bars 0.9 s |
-| Headline timing | every2s; letters enter in0.4s with18ms stagger (maximum0.742s); pointer hover does not pause |
-| Playback | entrances and the hero headline play once; each step illustration loops independently while it intersects the view, stop offscreen and pause in hidden tabs |
+| Headline timing | every2s continuously while visible; letters enter in0.4s with18ms stagger (maximum0.742s); pointer hover does not pause |
+| Playback | entrances play once; the hero headline and each step illustration loop independently while visible, stop offscreen and pause in hidden tabs. Returning to the headline starts a fresh two-second interval on the current phrase, with no catch-up; no observer keeps the first headline static |
 | Step timing | a shared four-second cycle: the action completes within three seconds, holds, then restarts. The owner explicitly chose looping without a pause control; do not claim WCAG 2.2.2 conformance |
 | Cheap properties | only transform, opacity and filter; the panel lift uses the separate `translate` property so it never fights the entrance `transform` |
 | Reduced motion | everything still; illustrations show their complete end state; the deck is a list |
@@ -120,6 +120,7 @@ Type only, no cards: large figures under hairlines; centred privacy statement; f
 ### 4.6 Components added for several pages (v1.5)
 - **Page nav (plan 14 R10, replacing the sticky strip below):** on module pages the global nav is not fixed and scrolls away; once it has gone, the page nav (`nav subnav`, the same three glass capsules: logo and module name, the page's sections, the main button) comes down from the top (`subnavShow` in `site.js` adds `is-on`; without the script it stays under the hero). Only one bar shows at a time, and nothing overlaps at the bottom.
 - **Logo (R11):** a D with a round counter, inline SVG with `currentColor` and `fill-rule: evenodd`, following the nav's tone; `favicon-d.svg` is a light D on a dark rounded square. All three marketing pages use this new path to avoid a stale browser tab-icon cache; the old `favicon.svg` remains for older pages.
+- **Headline lifecycle (R19):** the visible title loops every2s, with a fresh interval on return from bottom anchors. At widths up to480px, clamp(30px,9.4vw,44px) keeps every phrase complete; desktop sizes are unchanged.
 - **Heroes (R12, R13):** a large title, at most one short line under it, the buttons; what changes lives in the title's grey rotating word (`.rot`; on the overview the grey part comes second, `data-grey="rest"`).
 - **(Superseded) Sub-nav `.subnav` (first v1.6):** `position: sticky; top: 72px` (56px on phones), hairlines on the page colour rather than glass; once stuck it turns dark over dark sections (`navTone` in `site.js` measures it where it sticks). On these pages anchors land about 180px down (112px on phones) and the pinned deck stage moves to 136px. On phones the section links scroll sideways and fade at the edge.
 - **Three-step hero (`.scene--flow`, v1.6):** three equal panels in a row, top-aligned, not overlapping, joined by arrows (stacked with ↓ at ≤ 1080px); only what a reader takes in at a glance: the email (the impostor letter of the look-alike domain in `<mark>`), "High risk" with three reasons in the review screen's own words, the fixed reply and the call-back checklist. No code names.
@@ -159,16 +160,16 @@ Type only, no cards: large figures under hairlines; centred privacy statement; f
 | `scripts/site-preview.mjs` | Serves `site/` with the headers and redirects from `vercel.json`: `node scripts/site-preview.mjs 4181` |
 | `scripts/site-shots.mjs` (`node scripts/site-shots.mjs <dir> [base]`, default `http://localhost:4181`) | Screenshots of the four pages at desktop light and dark, 1261 × 657, 375px and reduced motion; page width at 320/375/390/768px; the nav at every width from 761 to 1200px; console and CSP errors |
 
-- The script only adds classes, sets custom properties through the CSSOM, starts and stops the visible step illustrations, opens an FAQ question a link points at, closes the phone menu after a link, and on `/` moves old Toolkit links on to `/toolkit/`; every page is complete without it. Limit: ≤ 6 KB as served (gzip); about 2 KB now.
+- The script only adds classes, sets custom properties through the CSSOM, controls visible headline loops and starts and stops the visible step illustrations, opens an FAQ question a link points at, closes the phone menu after a link, and on `/` moves old Toolkit links on to `/toolkit/`; every page is complete without it. Limit: ≤ 6 KB as served (gzip); about 2 KB now.
 - Step illustrations request no image or video assets; the page loads HTML/CSS/JS, local fonts and texture.
 - **No sideways scroll on phones:** `overflow-x: clip` on both `html` and `body`. The glows are 100vw wide; on `body` alone the setting passes to the viewport and phone browsers widen the layout to 1.5 ×.
 
-- Illustration validation: `scripts/check-illustrations.mjs` binds full text/descriptions/proportions to pinned sources; `scripts/illustrations-shots.mjs` and `scripts/deck-ui-walkthrough.mjs` verify layout, native scroll parity and independent playback.
+- Illustration validation: `scripts/check-illustrations.mjs` binds full text/descriptions/proportions to pinned sources; `scripts/illustrations-shots.mjs` and `scripts/deck-ui-walkthrough.mjs` verify layout, native scroll parity and independent playback. `scripts/hero-ui-walkthrough.mjs` checks multiple title loops, bottom-anchor returns, phone fit and visibility/motion lifecycle.
 
 ## 7. Accessibility
 - Focus rings: ink on light surfaces, light on the dark band, cards and footer (≥ 3:1).
 - Skip link; every section has a heading (labels are h2).
-- Step illustrations loop while visible without a pause control (explicit owner choice, §3.4); reduced motion is fully still.
+- Headlines and step illustrations loop while visible without a pause control (explicit owner choice, §3.4); reduced motion is fully still.
 - Animated text states are hidden from screen readers, with one stable text instead.
 - The FAQ uses native `<details>/<summary>` with their roles untouched, so screen readers announce the open state.
 
@@ -187,6 +188,7 @@ Type only, no cards: large figures under hairlines; centred privacy statement; f
 
 | Date | Decision | Why |
 |---|---|---|
+| 2026-11-03 | R19: headline phrases loop every2s while visible; offscreen, hidden tabs and reduced motion stop rotation; returning resumes the current phrase. Replaces the one-round stop rule | Owner reported a static title after returning from /#build and /#faq, and explicitly requested continuous rotation. Existing copy, card scrolling and independent illustrations stay unchanged |
 | 2026-11-03 | Use `favicon-d.svg` on all three marketing pages, retaining the D artwork; refresh the organisation profile with the logo, site links and the current Inbox demo | Owner reported the old tab icon in a screenshot. A new path avoids reuse of the old favicon cache without changing interactions or the official demo package |
 | 2026-11-03 | Seven source-backed step illustrations replace recordings; each visible illustration loops independently without a pause control, reduced motion is static | Owner approved the sample and the remaining cards, then explicitly chose visible looping without a pause control. This replaces the old once-only step rule; no WCAG 2.2.2 conformance claim |
 | 2026-11-03 | Upgrade the static Inbox demo to v0.1.1, pin its public commit and package, and update version and release/download links. Keep E0225 and the risk wording; explicitly retain the v0.1.0 evaluation with no new held-out measurement. | Published package and tag verified. That integration replaced only the static demo; the combined release now uses source-backed illustrations instead of product clips (R14/R18). |
