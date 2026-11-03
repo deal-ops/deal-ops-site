@@ -4,6 +4,10 @@
 
 document.documentElement.classList.add('js')
 
+// Plan 13 N29: the Toolkit moved from / to /toolkit/. An old link to one of its sections (/#faq-import, /#step-2, /#how,
+// /#trust, /#built) lands on the same section there. Reads the address only; the overview page has none of these ids.
+if (location.pathname === '/' && /^#(faq-[a-z-]+|step-[1-3]|how|trust|built)$/.test(location.hash)) location.replace('/toolkit/' + location.hash)
+
 const motion = matchMedia('(prefers-reduced-motion: no-preference)')
 const moving = () => motion.matches
 const onMotionChange = (fn) => motion.addEventListener('change', fn)
@@ -18,7 +22,28 @@ document.addEventListener('DOMContentLoaded', () => {
   navTone()
   scrollEffects()
   faqOpen()
+  menuClose()
+  subnavShow()
 })
+
+/** Module pages (plan 14 R10): once the global nav has scrolled away with the page, the page's own nav comes down from the
+    top, so only one bar shows at a time. Without the script it stays under the hero. */
+function subnavShow() {
+  const sub = document.querySelector('[data-subnav]')
+  const nav = document.querySelector('[data-nav]')
+  if (!sub || !nav) return
+  if (!('IntersectionObserver' in window)) return sub.classList.add('is-on')
+  new IntersectionObserver(([e]) => sub.classList.toggle('is-on', !e.isIntersecting)).observe(nav)
+}
+
+/** Phones: the native <details> menu closes once one of its links is followed, so it does not cover where it led. */
+function menuClose() {
+  const menu = document.querySelector('[data-menu]')
+  if (!menu) return
+  menu.addEventListener('click', (e) => {
+    if (e.target.closest('a')) menu.open = false
+  })
+}
 
 /** Hero: the phrase turns over letter by letter every 4.5 s, once through and back to the first, then stays still. Held while
     the pointer is on the title; never under reduced motion. The matching hero panel lifts with each phrase. */
@@ -26,13 +51,16 @@ function rotator() {
   const box = document.querySelector('[data-rotator]')
   if (!box) return
   const phrases = box.dataset.phrases.split('|').map((p) => p.split(':'))
+  // the grey part is the first half ("Reconcile an SPV") or, with data-grey="rest", the second ("for deal operations.");
+  // a second half that starts with punctuation follows without a space ("Every deal email,")
+  const greyRest = box.dataset.grey === 'rest'
   box.textContent = ''
   const items = phrases.map(([verb, rest]) => {
     const item = document.createElement('span')
     item.className = 'rot__item'
     for (const [text, cls] of [
-      [verb, 'rot__verb'],
-      [' ' + rest, ''],
+      [verb, greyRest ? '' : 'rot__verb'],
+      [(/^[,.;:]/.test(rest) ? '' : ' ') + rest, greyRest ? 'rot__verb' : ''],
     ]) {
       const part = document.createElement('span')
       if (cls) part.className = cls
@@ -76,9 +104,10 @@ function rotator() {
   }, 4500)
 }
 
-/** Hero illustration: the panel for the verb the headline shows lifts a little (the rotator calls this). */
+/** Hero illustration: the panel for the phrase the headline shows lifts a little (the rotator calls this). A panel can
+    stand for several phrases (data-step="1 2 3"). */
 function lightPanel(i) {
-  document.querySelectorAll('[data-scene] [data-step]').forEach((p) => p.classList.toggle('is-lit', Number(p.dataset.step) === i))
+  document.querySelectorAll('[data-scene] [data-step]').forEach((p) => p.classList.toggle('is-lit', p.dataset.step.split(' ').includes(String(i))))
 }
 
 /** Headings and text float in once as they enter the view. */
@@ -98,11 +127,13 @@ function reveals() {
   els.forEach((e) => io.observe(e))
 }
 
-/** The hover pill slides under the link the pointer or the keyboard is on. */
+/** The hover pill slides under the link the pointer or the keyboard is on (in each bar that has one). */
 function navPill() {
-  const list = document.querySelector('[data-nav-links]')
-  const pill = document.querySelector('[data-nav-pill]')
-  if (!list || !pill) return
+  for (const list of document.querySelectorAll('[data-nav-links]')) pillFor(list)
+}
+function pillFor(list) {
+  const pill = list.querySelector('[data-nav-pill]')
+  if (!pill) return
   const move = (a) => {
     pill.style.setProperty('--pill-x', a.offsetLeft + 'px')
     pill.style.setProperty('--pill-w', a.offsetWidth + 'px')
@@ -118,31 +149,33 @@ function navPill() {
   })
 }
 
-/** The glass navigation turns dark while a dark section sits under it. The watched band is the nav's own strip, in
-    pixels: Intersection Observer resolves percentage margins against the width, not the height. */
+/** The glass navigation, and a module page's sub-nav once it is stuck under it, turn dark while a dark section sits under
+    them. The watched band is each bar's own strip, in pixels: Intersection Observer resolves percentage margins against
+    the width, not the height. The sub-nav's strip is where it sticks (its CSS top), so it is right once it is stuck. */
 function navTone() {
-  const nav = document.querySelector('[data-nav]')
   const dark = document.querySelectorAll('[data-tone="dark"]')
-  if (!nav || !dark.length || !('IntersectionObserver' in window)) return
-  let io
-  const watch = () => {
-    if (io) io.disconnect()
-    const r = nav.getBoundingClientRect()
-    const mid = Math.round(r.top + r.height / 2)
-    const under = new Set()
-    io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries)
-          if (e.isIntersecting) under.add(e.target)
-          else under.delete(e.target)
-        nav.classList.toggle('is-dark', under.size > 0)
-      },
-      { rootMargin: `-${mid}px 0px -${Math.max(0, innerHeight - mid - 1)}px 0px` },
-    )
-    dark.forEach((d) => io.observe(d))
+  if (!dark.length || !('IntersectionObserver' in window)) return
+  for (const bar of document.querySelectorAll('[data-nav], [data-subnav]')) {
+    let io
+    const watch = () => {
+      if (io) io.disconnect()
+      const top = bar.matches('[data-subnav]') ? parseFloat(getComputedStyle(bar).top) || 0 : bar.getBoundingClientRect().top
+      const mid = Math.round(top + bar.offsetHeight / 2)
+      const under = new Set()
+      io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries)
+            if (e.isIntersecting) under.add(e.target)
+            else under.delete(e.target)
+          bar.classList.toggle('is-dark', under.size > 0)
+        },
+        { rootMargin: `-${mid}px 0px -${Math.max(0, innerHeight - mid - 1)}px 0px` },
+      )
+      dark.forEach((d) => io.observe(d))
+    }
+    watch()
+    addEventListener('resize', watch)
   }
-  watch()
-  addEventListener('resize', watch)
 }
 
 /** A link to one FAQ question (#faq-import) opens it, on arrival and on later in-page links. Reads the address only. */

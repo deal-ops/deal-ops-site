@@ -5,8 +5,11 @@ import { readFileSync, statSync } from 'node:fs'
 import { extname, join, normalize } from 'node:path'
 
 const ROOT = 'site'
-const PORT = Number(process.argv[2] ?? 4180)
-const headers = Object.fromEntries(JSON.parse(readFileSync(join(ROOT, 'vercel.json'), 'utf8')).headers[0].headers.map((h) => [h.key, h.value]))
+const PORT = Number(process.argv[2] ?? 4181)
+const vercel = JSON.parse(readFileSync(join(ROOT, 'vercel.json'), 'utf8'))
+const headers = Object.fromEntries(vercel.headers[0].headers.map((h) => [h.key, h.value]))
+// the pages' own redirects (/inbox → /inbox/), so the demo's relative paths resolve as in production
+const redirects = new Map((vercel.redirects ?? []).map((r) => [r.source, r.destination]))
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css',
@@ -19,6 +22,11 @@ const TYPES = {
 }
 
 createServer((req, res) => {
+  const asked = new URL(req.url, 'http://x').pathname
+  if (redirects.has(asked)) {
+    res.writeHead(308, { ...headers, Location: redirects.get(asked) }).end()
+    return
+  }
   let path = normalize(decodeURIComponent(new URL(req.url, 'http://x').pathname)).replace(/^(\.\.[/\\])+/, '')
   if (path.endsWith('/')) path += 'index.html'
   const file = join(ROOT, path)

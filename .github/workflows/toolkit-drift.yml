@@ -1,6 +1,7 @@
-name: Toolkit drift
-# Weekly (and on demand): run the website checks against the public Toolkit's latest main, not the pinned toolkit.ref.
-# Fails when a Toolkit release changed a sentence, label or figure the site quotes: then update the page and toolkit.ref.
+name: Toolkit and Inbox drift
+# Weekly (and on demand): run the website checks against the public Toolkit's and Inbox's latest main, not the pinned
+# toolkit.ref / inbox.ref. Fails when a release changed a sentence, label or figure the site quotes: then update the page and
+# the ref (for the Inbox also the demo package, scripts/inbox-demo.mjs).
 on:
   schedule:
     - cron: '17 6 * * 1'
@@ -20,7 +21,12 @@ jobs:
         run: npm run toolkit:fetch
         env:
           TOOLKIT_REF: main
-      - name: Website checks against it
+      - name: Public Inbox at its latest main
+        run: npm run inbox:fetch
+        env:
+          INBOX_REF: main
+      - name: Website checks against them
         run: npm run site:check
         env:
           TOOLKIT_DIR: vendor/toolkit
+          INBOX_DIR: vendor/inbox

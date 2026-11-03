@@ -1,0 +1,793 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Deal Ops Inbox: a read-only email agent for deal operations</title>
+    <meta
+      name="description"
+      content="An open-source email agent you host yourself. It sorts each email in your deal-operations inbox, links it to your deals and investors, flags risk and prepares a reply from a fixed template. A person reviews and sends. It never sends email."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/inter-latin-wght.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/plex-mono-latin-500.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/site.js"></script>
+  </head>
+  <body class="has-subnav">
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="nav" data-nav>
+      <a class="nav__brand glass" href="/"
+        ><svg class="logo" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+          <path fill="currentColor" fill-rule="evenodd" d="M6 4h9a12 12 0 0 1 0 24H6zM15 11a5 5 0 1 0 0 10a5 5 0 1 0 0-10z" /></svg
+        >Deal Ops</a
+      >
+      <nav class="nav__links glass" aria-label="Deal Ops" data-nav-links>
+        <span class="nav__pill" aria-hidden="true" data-nav-pill></span>
+        <a href="/toolkit/">Toolkit</a>
+        <a href="/inbox/" aria-current="page">Inbox</a>
+        <a href="/#build">How we build</a>
+        <a href="/#faq">FAQ</a>
+      </nav>
+      <details class="nav__menu" data-menu>
+        <summary>Menu</summary>
+        <ul>
+          <li><a href="/">Overview</a></li>
+          <li><a href="/toolkit/">Deal Ops Toolkit</a></li>
+          <li><a href="/inbox/" aria-current="page">Deal Ops Inbox</a></li>
+          <li><a href="/#build">How we build</a></li>
+          <li><a href="/#faq">FAQ</a></li>
+        </ul>
+      </details>
+      <span class="nav__end">
+        <a class="nav__cta glass" href="https://github.com/deal-ops">GitHub</a>
+      </span>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <h1 class="hero__title">
+          <span class="sr-only">Every deal email, ready for review: payment questions, KYC files, withdrawals and changes of bank details.</span>
+          <span
+            class="hero__line rot"
+            aria-hidden="true"
+            data-rotator
+            data-phrases="Every deal email:,|Payment questions:,|KYC files:,|Withdrawals:,|Bank-detail changes:,"
+          >
+            <span class="rot__item is-on"><span class="rot__verb">Every deal email</span>,</span>
+          </span>
+          <span class="hero__line" aria-hidden="true">ready for review.</span>
+        </h1>
+        <p class="hero__lede">A self-hosted email agent. A person decides and sends.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="/inbox/demo/">See the demo</a>
+          <a class="btn btn--quiet" href="https://github.com/deal-ops/deal-ops-inbox">View the code <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+        <!-- Hero illustration: one email from the demo (sample E0225) as a three-step flow, set in type; the reasons are the
+             review screen's own wording (plan 14 R4); not screenshots -->
+        <figure class="scene scene--flow" data-scene>
+          <div class="panel">
+            <p class="panel__eyebrow">1 · The email</p>
+            <p class="panel__title">Northwind Robotics - change of bank account</p>
+            <p class="panel__from">Ethan Clarke<small>ethan.clarke@northwind-robot<mark>l</mark>cs.example</small></p>
+            <p class="panel__spot">robot<mark>l</mark>cs, not robotics</p>
+            <p class="panel__quote">
+              Please note that our bank has changed. With immediate effect, all subscription monies for Northwind Robotics Ltd should be paid to our new
+              account&hellip;
+            </p>
+          </div>
+          <div class="panel">
+            <p class="panel__eyebrow">2 · The check</p>
+            <p class="panel__title">Rated by fixed rules</p>
+            <span class="pill pill--warn pill--lg">High risk</span>
+            <ul class="reasons">
+              <li>Display name matches a contact, address does not</li>
+              <li>Look-alike domain</li>
+              <li>First mail from this address, with an account number</li>
+            </ul>
+            <p class="panel__foot">Bank details are never applied from an email.</p>
+          </div>
+          <div class="panel">
+            <p class="panel__eyebrow">3 · Prepared</p>
+            <p class="panel__title">A fixed reply and a call-back</p>
+            <p class="panel__text">
+              Thank you for your email. We have received it and will confirm next steps with you through the contact details we already hold for you.
+            </p>
+            <ul class="checks">
+              <li>Call the phone number on file</li>
+              <li>Do not use any phone number or link from the email</li>
+            </ul>
+            <p class="panel__foot">After a cooling-off period, a second person approves.</p>
+          </div>
+          <figcaption class="sr-only">
+            One email from the demo, in three steps: an email from a look-alike address asks for money to go to a new bank account; fixed rules rate it high
+            risk (three of its reasons shown), and the bank details are never applied; the prepared reply is a fixed acknowledgement, with a call-back checklist
+            and approval by a second person.
+          </figcaption>
+        </figure>
+      </section>
+      <nav class="nav subnav" aria-label="Deal Ops Inbox" data-subnav>
+        <span class="nav__brand glass subnav__brand"
+          ><a href="/" aria-label="Deal Ops home"
+            ><svg class="logo" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+              <path fill="currentColor" fill-rule="evenodd" d="M6 4h9a12 12 0 0 1 0 24H6zM15 11a5 5 0 1 0 0 10a5 5 0 1 0 0-10z" /></svg></a
+          ><a class="subnav__name" href="#top">Inbox</a></span
+        >
+        <span class="nav__links glass" data-nav-links>
+          <span class="nav__pill" aria-hidden="true" data-nav-pill></span>
+          <a href="#problem">Problem</a>
+          <a href="#how">How it works</a>
+          <a href="#cases">Use cases</a>
+          <a href="#security">Security</a>
+          <a href="#faq">Inbox FAQ</a>
+        </span>
+        <span class="nav__end">
+          <a class="nav__cta glass" href="/inbox/demo/">See the demo</a>
+        </span>
+      </nav>
+
+      <section class="built built--top" id="problem" aria-labelledby="problem-h">
+        <h2 class="eyebrow section-label" id="problem-h">The problem</h2>
+        <ol class="built__grid">
+          <li data-reveal>
+            <span class="built__n">01</span>
+            <h3>One or two shared inboxes</h3>
+            <p>Payment questions, payment confirmations, KYC files, withdrawals and changes of details all land in the same place.</p>
+          </li>
+          <li data-reveal>
+            <span class="built__n">02</span>
+            <h3>Every email needs a lookup</h3>
+            <p>Someone works out what it is, finds the investor and the deal, checks the ledger and replies.</p>
+          </li>
+          <li data-reveal>
+            <span class="built__n">03</span>
+            <h3>The risky ones look ordinary</h3>
+            <p>
+              A criminal claims the bank details have changed, often after intercepting emails or taking over a mailbox. UK Finance counted £41.3m lost to these
+              invoice and mandate scams in 2025, 68% of it from business accounts.
+            </p>
+          </li>
+          <li data-reveal>
+            <span class="built__n">04</span>
+            <h3>Generic tools don&rsquo;t know deals</h3>
+            <p>A payment confirmation is not proof of receipt, and a passport scan by email is not a KYC check.</p>
+          </li>
+        </ol>
+        <p class="source-note">Fraud figures: UK Finance, Annual Fraud Report 2026 (figures for 2025), invoice and mandate scams.</p>
+      </section>
+
+      <section class="steps" id="how" aria-labelledby="how-h">
+        <h2 class="sr-only" id="how-h">How it works</h2>
+        <div class="steps__body" data-tone="dark">
+          <div class="deck deck--4" data-deck>
+            <div class="deck__stage">
+              <div class="deck__cards">
+                <article class="card" id="step-1" data-card data-tone="dark">
+                  <div class="card__text">
+                    <p class="eyebrow">Step 1 · Read</p>
+                    <h3 class="card__title">Every email comes in read-only.</h3>
+                    <p class="card__body">
+                      Connect IMAP, Gmail or Microsoft 365 read-only, or import .eml files. Each attachment is virus-scanned, then parsed in a sandboxed
+                      container with no network.
+                    </p>
+                  </div>
+                  <div class="media media--sage">
+                    <div class="media__stage">
+                      <div class="media__glow" aria-hidden="true"></div>
+                      <div class="media__frame">
+                        <picture>
+                          <source srcset="/inbox/media/read-dark-focus.jpg" media="(prefers-color-scheme: dark)" />
+                          <img
+                            src="/inbox/media/read-light-focus.jpg"
+                            width="1280"
+                            height="800"
+                            loading="lazy"
+                            alt="The Case list in the demo: each email with its risk, status, queue and due time."
+                          />
+                        </picture>
+                        <video muted playsinline preload="none" aria-hidden="true" data-video>
+                          <source src="/inbox/media/read-dark-focus.mp4" type="video/mp4" media="(prefers-color-scheme: dark)" />
+                          <source src="/inbox/media/read-light-focus.mp4" type="video/mp4" />
+                        </video>
+                      </div>
+                    </div>
+                    <p class="media__caption">In the local demo: the Case list, each email with its risk, status, queue and due time.</p>
+                  </div>
+                </article>
+                <article class="card" id="step-2" data-card data-tone="dark">
+                  <div class="card__text">
+                    <p class="eyebrow">Step 2 · Understand</p>
+                    <h3 class="card__title">Code reads the numbers. The model only sorts.</h3>
+                    <p class="card__body">
+                      Amounts, references, UETRs and account numbers are read by code, including MT103 and pacs.008 files. The model only picks categories and
+                      extracts fields, from redacted text and with no tools.
+                    </p>
+                  </div>
+                  <div class="media media--peach">
+                    <div class="media__stage">
+                      <div class="media__glow" aria-hidden="true"></div>
+                      <div class="media__frame">
+                        <picture>
+                          <source srcset="/inbox/media/understand-dark-focus.jpg" media="(prefers-color-scheme: dark)" />
+                          <img
+                            src="/inbox/media/understand-light-focus.jpg"
+                            width="1280"
+                            height="800"
+                            loading="lazy"
+                            alt="The foot of a Case: the model&rsquo;s category with its reason, then the fields read from the email, each to confirm or edit."
+                          />
+                        </picture>
+                        <video muted playsinline preload="none" aria-hidden="true" data-video>
+                          <source src="/inbox/media/understand-dark-focus.mp4" type="video/mp4" media="(prefers-color-scheme: dark)" />
+                          <source src="/inbox/media/understand-light-focus.mp4" type="video/mp4" />
+                        </video>
+                      </div>
+                    </div>
+                    <p class="media__caption">In the local demo: from the email down to the model&rsquo;s category and the fields read from it.</p>
+                  </div>
+                </article>
+                <article class="card" id="step-3" data-card data-tone="dark">
+                  <div class="card__text">
+                    <p class="eyebrow">Step 3 · Check</p>
+                    <h3 class="card__title">Linked to your deals. Risk set by rules.</h3>
+                    <p class="card__body">
+                      It looks for the matching deal, investor and contact, and says when there is none. Fixed rules set the risk from the category and signals
+                      such as a look-alike domain, and the model can never lower it.
+                    </p>
+                  </div>
+                  <div class="media media--clay">
+                    <div class="media__stage">
+                      <div class="media__glow" aria-hidden="true"></div>
+                      <div class="media__frame">
+                        <picture>
+                          <source srcset="/inbox/media/check-dark-focus.jpg" media="(prefers-color-scheme: dark)" />
+                          <img
+                            src="/inbox/media/check-light-focus.jpg"
+                            width="1280"
+                            height="800"
+                            loading="lazy"
+                            alt="A change-of-bank-account email rated high by the rules, with its reasons: display name, look-alike domain, first mail from this address."
+                          />
+                        </picture>
+                        <video muted playsinline preload="none" aria-hidden="true" data-video>
+                          <source src="/inbox/media/check-dark-focus.mp4" type="video/mp4" media="(prefers-color-scheme: dark)" />
+                          <source src="/inbox/media/check-light-focus.mp4" type="video/mp4" />
+                        </video>
+                      </div>
+                    </div>
+                    <p class="media__caption">In the local demo: a change-of-bank-account email, its signals, then the risk the rules set.</p>
+                  </div>
+                </article>
+                <article class="card" id="step-4" data-card data-tone="dark">
+                  <div class="card__text">
+                    <p class="eyebrow">Step 4 · Prepare</p>
+                    <h3 class="card__title">You review. You send.</h3>
+                    <p class="card__body">
+                      A reply is filled from a fixed template and the email goes to a queue with a due time. A person approves the reply, copies it and sends it
+                      from their own mail client.
+                    </p>
+                  </div>
+                  <div class="media media--sage">
+                    <div class="media__stage">
+                      <div class="media__glow" aria-hidden="true"></div>
+                      <div class="media__frame">
+                        <picture>
+                          <source srcset="/inbox/media/prepare-dark-focus.jpg" media="(prefers-color-scheme: dark)" />
+                          <img
+                            src="/inbox/media/prepare-light-focus.jpg"
+                            width="1280"
+                            height="800"
+                            loading="lazy"
+                            alt="A reply approved and waiting to be sent by a person, with buttons to copy the recipient, the subject and the text."
+                          />
+                        </picture>
+                        <video muted playsinline preload="none" aria-hidden="true" data-video>
+                          <source src="/inbox/media/prepare-dark-focus.mp4" type="video/mp4" media="(prefers-color-scheme: dark)" />
+                          <source src="/inbox/media/prepare-light-focus.mp4" type="video/mp4" />
+                        </video>
+                      </div>
+                    </div>
+                    <p class="media__caption">In the local demo: the prepared reply approved, then copied to paste into your own mail client.</p>
+                  </div>
+                </article>
+              </div>
+              <ol class="deck__nav" aria-label="Steps">
+                <li>
+                  <a href="#step-1" data-deck-link
+                    >Read<span class="deck__bar" aria-hidden="true"><span></span></span
+                  ></a>
+                </li>
+                <li>
+                  <a href="#step-2" data-deck-link
+                    >Understand<span class="deck__bar" aria-hidden="true"><span></span></span
+                  ></a>
+                </li>
+                <li>
+                  <a href="#step-3" data-deck-link
+                    >Check<span class="deck__bar" aria-hidden="true"><span></span></span
+                  ></a>
+                </li>
+                <li>
+                  <a href="#step-4" data-deck-link
+                    >Prepare<span class="deck__bar" aria-hidden="true"><span></span></span
+                  ></a>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="trust" id="trust" data-tone="dark" aria-labelledby="trust-h">
+        <div class="trust__inner">
+          <h2 class="eyebrow section-label" id="trust-h">Why trust the results</h2>
+          <dl class="facts">
+            <div class="fact" data-reveal>
+              <dt>57 / 57</dt>
+              <dd>High-risk emails rated high, on emails development never read.</dd>
+            </div>
+            <div class="fact" data-reveal>
+              <dt>12 / 12</dt>
+              <dd>Malicious bank-detail changes and look-alike senders rated high.</dd>
+            </div>
+            <div class="fact" data-reveal>
+              <dt>7 / 7</dt>
+              <dd>Prompt-injection emails judged the same as their clean twins.</dd>
+            </div>
+            <div class="fact" data-reveal>
+              <dt>0.946</dt>
+              <dd>
+                Classification score (macro F1), over the categories whose risk floor is not high, without unclassified and categories with no example in the
+                set.
+              </dd>
+            </div>
+          </dl>
+          <p class="trust__note">
+            v0.1.0 release checks: 121 held-out fictional emails, one run with a real model (Claude Opus 5.5) by an independent runner.<br />
+            Measured on v0.1.0; v0.1.1 reports no new held-out measurement. A person still reviews every Case and reply.
+          </p>
+        </div>
+      </section>
+
+      <section class="built built--top" id="cases" aria-labelledby="cases-h">
+        <h2 class="eyebrow section-label" id="cases-h">Use cases</h2>
+        <ol class="built__grid built__grid--3">
+          <li class="case" id="case-paid">
+            <span class="built__n">01</span>
+            <h3>I&rsquo;ve paid. Has it arrived?</h3>
+            <p>Finds the investor&rsquo;s commitment, checks the ledger and prepares the reply that fits what has arrived.</p>
+            <a class="case__link" href="/inbox/demo/#case=E0001">Open in the demo <span class="arrow" aria-hidden="true">→</span></a>
+          </li>
+          <li class="case" id="case-evidence">
+            <span class="built__n">02</span>
+            <h3>A payment confirmation is attached</h3>
+            <p>Reads the UETR, amount and value date from the MT103 or pacs.008 file, and shows it as the sender&rsquo;s confirmation, not proof of receipt.</p>
+            <a class="case__link" href="/inbox/demo/#case=E0024">Open in the demo <span class="arrow" aria-hidden="true">→</span></a>
+          </li>
+          <li class="case" id="case-unreferenced">
+            <span class="built__n">03</span>
+            <h3>Paid from someone else&rsquo;s account</h3>
+            <p>Finds the investor and the commitment, and asks you to check the payment in the ledger.</p>
+            <a class="case__link" href="/inbox/demo/#case=E0035">Open in the demo <span class="arrow" aria-hidden="true">→</span></a>
+          </li>
+          <li class="case" id="case-kyc">
+            <span class="built__n">04</span>
+            <h3>KYC documents</h3>
+            <p>Code spots likely ID documents, keeps them from any model and transfers them to your KYC folder or webhook. It never verifies KYC.</p>
+            <a class="case__link" href="/inbox/demo/#case=E0045">Open in the demo <span class="arrow" aria-hidden="true">→</span></a>
+          </li>
+          <li class="case" id="case-withdrawal">
+            <span class="built__n">05</span>
+            <h3>A withdrawal before closing</h3>
+            <p>
+              Checks for the investor&rsquo;s consent (here, the investor is copied in) and suggests marking them withdrawn in the Toolkit; without it, it asks
+              for written consent first. A person makes the change.
+            </p>
+            <a class="case__link" href="/inbox/demo/#case=E0053">Open in the demo <span class="arrow" aria-hidden="true">→</span></a>
+          </li>
+          <li class="case" id="case-bank">
+            <span class="built__n">06</span>
+            <h3>Our bank details have changed</h3>
+            <p>Never takes the new details. It prepares a fixed acknowledgement and a call-back task that a second person approves.</p>
+            <a class="case__link" href="/inbox/demo/#case=E0225">Open in the demo <span class="arrow" aria-hidden="true">→</span></a>
+          </li>
+        </ol>
+        <details class="faq__item built__more" id="case-categories">
+          <summary>All default categories, with their risk floor and queue</summary>
+          <div>
+            <table class="cats">
+              <thead>
+                <tr>
+                  <th scope="col">Category</th>
+                  <th scope="col">Risk floor</th>
+                  <th scope="col">Queue</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>payment_query</code></td>
+                  <td>medium</td>
+                  <td><code>ops</code></td>
+                </tr>
+                <tr>
+                  <td><code>payment_evidence</code></td>
+                  <td>medium</td>
+                  <td><code>ops</code></td>
+                </tr>
+                <tr>
+                  <td><code>unreferenced_payment</code></td>
+                  <td>medium</td>
+                  <td><code>ops</code></td>
+                </tr>
+                <tr>
+                  <td><code>kyc_documents</code></td>
+                  <td>high</td>
+                  <td><code>compliance</code></td>
+                </tr>
+                <tr>
+                  <td><code>withdrawal</code></td>
+                  <td>high</td>
+                  <td><code>ops</code></td>
+                </tr>
+                <tr>
+                  <td><code>commitment_change</code></td>
+                  <td>medium</td>
+                  <td><code>ops</code></td>
+                </tr>
+                <tr>
+                  <td><code>fee_or_terms_change</code></td>
+                  <td>high</td>
+                  <td><code>deal_ops</code></td>
+                </tr>
+                <tr>
+                  <td><code>closing_confirmation</code></td>
+                  <td>medium</td>
+                  <td><code>deal_ops</code></td>
+                </tr>
+                <tr>
+                  <td><code>legal_documents</code></td>
+                  <td>high</td>
+                  <td><code>legal</code></td>
+                </tr>
+                <tr>
+                  <td><code>bank_details</code></td>
+                  <td>high</td>
+                  <td><code>compliance</code></td>
+                </tr>
+                <tr>
+                  <td><code>identity_change</code></td>
+                  <td>high</td>
+                  <td><code>compliance</code></td>
+                </tr>
+                <tr>
+                  <td><code>tax_certificates</code></td>
+                  <td>medium</td>
+                  <td><code>legal</code></td>
+                </tr>
+                <tr>
+                  <td><code>exit_distribution</code></td>
+                  <td>medium</td>
+                  <td><code>deal_ops</code></td>
+                </tr>
+                <tr>
+                  <td><code>bank_letter_request</code></td>
+                  <td>low</td>
+                  <td><code>ops</code></td>
+                </tr>
+                <tr>
+                  <td><code>account_access</code></td>
+                  <td>medium</td>
+                  <td><code>ops</code></td>
+                </tr>
+                <tr>
+                  <td><code>complaint</code></td>
+                  <td>medium</td>
+                  <td><code>ops_lead</code></td>
+                </tr>
+                <tr>
+                  <td><code>other_known</code></td>
+                  <td>high</td>
+                  <td><code>ops_lead</code></td>
+                </tr>
+                <tr>
+                  <td><code>unclassified</code></td>
+                  <td>medium</td>
+                  <td><code>ops</code></td>
+                </tr>
+              </tbody>
+            </table>
+            <p>Categories, templates, queues and deadlines are configuration, not code.</p>
+          </div>
+        </details>
+      </section>
+
+      <section class="privacy privacy--tight" id="security" aria-labelledby="security-h">
+        <h2 class="privacy__title" id="security-h" data-reveal>It reads. It suggests. It never sends.</h2>
+        <p class="privacy__body" data-reveal>
+          No code path sends email or writes to a mailbox, and a CI check fails the build on any mail-write call. A person sends every reply.
+        </p>
+      </section>
+      <section class="risks" aria-label="Risks and defences">
+        <dl class="risks__list">
+          <div>
+            <dt>Changed bank details</dt>
+            <dd>
+              Bank details in an email are never applied to any record. Fixed reply, a call-back to the number on file, a cooling-off period, a second person.
+            </dd>
+          </div>
+          <div>
+            <dt>Look-alike senders</dt>
+            <dd>
+              Look-alike domains, mismatched display names and a different Reply-To raise the risk. Record data goes only to an authenticated sender entitled to
+              see it.
+            </dd>
+          </div>
+          <div>
+            <dt>Instructions hidden in an email</dt>
+            <dd>The model has no tools, writes no outbound text and chooses no template, and it can never lower the risk.</dd>
+          </div>
+          <div>
+            <dt>Personal data and model providers</dt>
+            <dd>
+              Recognised personal values are redacted before any model sees the text, local or hosted, and possible ID documents never reach a model. A hosted
+              provider refuses to start until you record a data processing agreement, unless you override it, which shows a warning.
+            </dd>
+          </div>
+          <div>
+            <dt>Malicious attachments</dt>
+            <dd>Every attachment is virus-scanned, then parsed in a separate sandboxed container with no network.</dd>
+          </div>
+          <div>
+            <dt>Stored data and the audit trail</dt>
+            <dd>
+              All text in the database is encrypted; only ids, types, hashes, times and amounts are kept in the clear. The audit log is hash-chained, the
+              app&rsquo;s own database roles cannot change or delete it, and a daily export of its latest hash, kept off the server, shows if recent records go
+              missing.
+            </dd>
+          </div>
+        </dl>
+        <p class="built__links">
+          <a href="https://github.com/deal-ops/deal-ops-inbox/blob/main/docs/en/security-model.md"
+            >Security model <span class="arrow" aria-hidden="true">→</span></a
+          >
+        </p>
+      </section>
+
+      <section class="built" id="setup" aria-labelledby="setup-h">
+        <h2 class="eyebrow section-label" id="setup-h">Your server, your choices</h2>
+        <ol class="built__grid">
+          <li data-reveal>
+            <span class="built__n">01</span>
+            <h3>Mailboxes</h3>
+            <p>
+              IMAP, .eml import, Gmail and Microsoft 365, all read-only. Microsoft 365 and Gmail push notifications (Pub/Sub) were tested only against simulated
+              services. Gmail polling was tested on one personal Gmail account.
+            </p>
+          </li>
+          <li data-reveal>
+            <span class="built__n">02</span>
+            <h3>Model</h3>
+            <p>Anthropic Claude, or a local model through Ollama. Recorded replies run the demo and the tests without any model.</p>
+          </li>
+          <li data-reveal>
+            <span class="built__n">03</span>
+            <h3>Your records</h3>
+            <p>
+              Deals, commitments, bank lines and the reconciliation ledger from Deal Ops Toolkit CSV files, plus a contacts file. Out: CSV lists and signed
+              events.
+            </p>
+          </li>
+          <li data-reveal>
+            <span class="built__n">04</span>
+            <h3>Your rules</h3>
+            <p>
+              Retention periods for emails and old directory versions, KYC transfer to your own folder or webhook, master key rotation, DPIA and LIA templates.
+              Apache-2.0.
+            </p>
+          </li>
+        </ol>
+        <p class="built__note">
+          Three roles: reviewer, approver and admin. A change of bank details needs a call-back and a second, different person to approve.
+        </p>
+        <p class="built__links">
+          <a href="https://github.com/deal-ops/deal-ops-inbox/blob/main/docs/en/quickstart.md">Quick start <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="https://github.com/deal-ops/deal-ops-inbox/releases/tag/v0.1.1">Release notes <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="https://github.com/deal-ops/deal-ops-inbox/releases/download/v0.1.1/deal-ops-inbox-demo-v0.1.1.tar.gz"
+            >Demo package <span class="arrow" aria-hidden="true">→</span></a
+          >
+          <a href="https://github.com/deal-ops/deal-ops-inbox/releases/download/v0.1.1/deal-ops-inbox-demo-v0.1.1.tar.gz.sha256"
+            >Package checksum <span class="arrow" aria-hidden="true">→</span></a
+          >
+        </p>
+      </section>
+
+      <section class="faq" id="faq" aria-labelledby="faq-h">
+        <h2 class="eyebrow section-label" id="faq-h">FAQ</h2>
+        <div class="faq__group">
+          <h3 class="faq__h">What it is</h3>
+          <div class="faq__list">
+            <details class="faq__item" id="ifaq-not">
+              <summary>What does it not do?</summary>
+              <p>
+                It does not send email, write drafts or change anything in your mailbox. It does not move money, connect to a bank or change business records,
+                including the Toolkit&rsquo;s. It does not verify KYC. It does not read images or scans: there is no OCR.
+              </p>
+            </details>
+            <details class="faq__item" id="ifaq-cost">
+              <summary>What does it cost?</summary>
+              <p>
+                The software is free and open source under the Apache-2.0 licence. You pay for your own server and, if you use one, a hosted model. The demo and
+                the tests in CI run on recorded model replies, with no model calls.
+              </p>
+            </details>
+          </div>
+        </div>
+        <div class="faq__group">
+          <h3 class="faq__h">Setting it up</h3>
+          <div class="faq__list">
+            <details class="faq__item" id="ifaq-install">
+              <summary>How do I install it?</summary>
+              <p>
+                With Docker Compose on your own server: separate containers for the app, maintenance, the database, the virus scanner and a sandboxed attachment
+                parser. The <a href="https://github.com/deal-ops/deal-ops-inbox/blob/main/docs/en/quickstart.md">quick start</a> walks through it, and the demo
+                runs on your own machine with fictional data and no outbound connections.
+              </p>
+            </details>
+            <details class="faq__item" id="ifaq-mailbox">
+              <summary>Which mailboxes can it read?</summary>
+              <p>
+                IMAP (opened read-only), .eml import, Gmail (read-only, one consent per mailbox) and Microsoft 365 (read permission on the mailboxes you name,
+                checked at every start). Microsoft 365 and Gmail push notifications (Pub/Sub) were tested only against simulated services. Gmail polling was
+                tested on one personal Gmail account.
+              </p>
+            </details>
+            <details class="faq__item" id="ifaq-model">
+              <summary>Which model does it use? Can I use a local one?</summary>
+              <p>
+                Anthropic Claude, or a local model through Ollama. A local model gets the same redacted text. By default a hosted provider refuses to start
+                until you record that a data processing agreement exists; an explicit override starts it with a warning in the log and in the review screens.
+              </p>
+            </details>
+            <details class="faq__item" id="ifaq-config">
+              <summary>Can I change the categories and replies?</summary>
+              <p>
+                Yes. Categories, queues, reply templates and deadlines are configuration files. The investment categories in the
+                <a href="#case-categories">list above</a> are only the default.
+              </p>
+            </details>
+            <details class="faq__item" id="ifaq-roles">
+              <summary>Who can do what?</summary>
+              <p>
+                Three roles: reviewer, approver and admin. Sign in with local accounts or with your own identity provider (OIDC). In this version users and
+                directory imports have no screens: an admin uses the HTTP API, as described in
+                <a href="https://github.com/deal-ops/deal-ops-inbox/blob/main/docs/en/users-and-directory.md">Users and directory</a>.
+              </p>
+            </details>
+          </div>
+        </div>
+        <div class="faq__group">
+          <h3 class="faq__h">Your data</h3>
+          <div class="faq__list">
+            <details class="faq__item" id="ifaq-where">
+              <summary>Where does my data live?</summary>
+              <p>
+                On your own server. The software has no analytics. Your data goes only where you configure: your mailboxes, your model provider and, if you use
+                them, your sign-in provider, a webhook and your KYC folder or webhook. The virus scanner also downloads virus database updates.
+              </p>
+            </details>
+            <details class="faq__item" id="ifaq-sent">
+              <summary>What is sent to the model?</summary>
+              <p>
+                Only redacted text: the subject, display names, the body, attachment file names and the text of attachments that are not possible KYC documents.
+                Values that match the documented patterns are replaced with placeholders first: IBANs, UK account numbers and sort codes, UK ID numbers, dates
+                of birth, UK addresses, phone numbers, the local part of email addresses and the names in your directory. Other values, such as a name that is
+                not in your directory, are not recognised (<a href="https://github.com/deal-ops/deal-ops-inbox/blob/main/docs/en/models-and-data-protection.md"
+                  >what is redacted</a
+                >). Account and ID placeholders are never turned back into values, even on screen. Amounts, references and UETRs are kept, because sorting needs
+                them.
+              </p>
+            </details>
+            <details class="faq__item" id="ifaq-kyc">
+              <summary>What happens to passports and other ID documents?</summary>
+              <p>
+                Code decides whether an attachment may be a KYC document: by its file name, by its text (such as a passport machine-readable line), or because
+                it is an image, a scan or cannot be checked. Its content is never sent to any model, local or hosted. It is transferred to your own KYC folder
+                or webhook and then removed from the app.
+              </p>
+            </details>
+            <details class="faq__item" id="ifaq-stored">
+              <summary>What does it store, and for how long?</summary>
+              <p>
+                The original email, its attachments and the Case; possible KYC documents are transferred to you and then removed. All text in the database is
+                encrypted. Emails and old directory versions are deleted after the retention period you set, by a daily job; audit rows, which hold no personal
+                data, are kept. Your backups keep data for as long as your backup policy keeps them.
+              </p>
+            </details>
+          </div>
+        </div>
+        <div class="faq__group">
+          <h3 class="faq__h">Risk and trust</h3>
+          <div class="faq__list">
+            <details class="faq__item" id="ifaq-spoof">
+              <summary>How does it spot impersonation?</summary>
+              <p>
+                A display name that doesn&rsquo;t match the address, a look-alike domain, a different Reply-To and a first-time sender who gives an account
+                number all raise the risk. A reply that discloses someone&rsquo;s records goes only to an authenticated sender who is entitled to see them.
+              </p>
+            </details>
+            <details class="faq__item" id="ifaq-accuracy">
+              <summary>How do you know it works?</summary>
+              <p>
+                The rules are compared with an independent Python implementation, and mutation checks test the tests. Fictional test emails were written by
+                independent agents that saw only the requirements: a development set, run in CI on recorded model replies, and a separate held-out set that
+                development never read, run once with a real model for v0.1.0. No new held-out measurement is reported for v0.1.1. The results are
+                <a href="#trust">on this page</a> and in the release notes.
+              </p>
+            </details>
+            <details class="faq__item" id="ifaq-ready">
+              <summary>Is it ready for real mailboxes?</summary>
+              <p>
+                It is version 0.1.1: only what is built and tested is described here, and the
+                <a href="https://github.com/deal-ops/deal-ops-inbox/releases/tag/v0.1.1">release notes</a> list its limits; for example, it has not been tested
+                with real production mail volumes. Read the security model and fill in the DPIA and LIA templates before connecting a real mailbox. Report
+                problems by <a href="mailto:haixiangyuann@gmail.com">email</a>, without real investor details.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta" aria-labelledby="cta-h">
+        <h2 class="cta__title" id="cta-h" data-reveal>See it work on sample emails</h2>
+        <p class="cta__body" data-reveal>Fictional deals, people and emails. Nothing to install.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="/inbox/demo/">See the demo</a>
+          <a class="btn btn--quiet" href="https://github.com/deal-ops/deal-ops-inbox">View the code <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer" data-tone="dark">
+      <div class="footer__cols">
+        <div>
+          <h2 class="footer__h">Modules</h2>
+          <ul>
+            <li><a href="/toolkit/">Deal Ops Toolkit</a></li>
+            <li><a href="https://deal-ops-toolkit.vercel.app">Open the Toolkit app</a></li>
+            <li><a href="/inbox/">Deal Ops Inbox</a></li>
+            <li><a href="/inbox/demo/">Inbox demo</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="footer__h">Code</h2>
+          <ul>
+            <li><a href="https://github.com/deal-ops/deal-ops-toolkit">Toolkit on GitHub</a></li>
+            <li><a href="https://github.com/deal-ops/deal-ops-toolkit/blob/main/docs/RELEASE_NOTES.md">Toolkit release notes</a></li>
+            <li><a href="https://github.com/deal-ops/deal-ops-inbox">Inbox on GitHub</a></li>
+            <li><a href="https://github.com/deal-ops/deal-ops-inbox/releases/tag/v0.1.1">Inbox release notes</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="footer__h">Project</h2>
+          <ul>
+            <li><a href="/#build">How we build</a></li>
+            <li><a href="https://github.com/deal-ops/deal-ops-toolkit/blob/main/docs/en/REVIEW_SUMMARY.md">Toolkit review summary</a></li>
+            <li><a href="https://github.com/deal-ops/deal-ops-inbox/blob/main/LICENSE">Licence: Apache-2.0</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="footer__h">Contact</h2>
+          <ul>
+            <li><a href="mailto:haixiangyuann@gmail.com">Email</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer__legal">
+        This is not investment, tax or legal advice. Check every result yourself before you rely on it. Not affiliated with any platform.
+      </p>
+      <p class="footer__note">Deal Ops is open-source software, not a regulated service. It does not hold money, give advice or act for you.</p>
+      <p class="footer__mark" aria-hidden="true">Deal Ops</p>
+    </footer>
+  </body>
+</html>

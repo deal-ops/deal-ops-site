@@ -6,10 +6,11 @@
   "license": "Apache-2.0",
   "scripts": {
     "toolkit:fetch": "node scripts/fetch-toolkit.mjs",
+    "inbox:fetch": "node scripts/fetch-inbox.mjs",
     "site:build": "rolldown site-src/site.js -f iife -m -o site/site.js",
     "site:check": "node scripts/check-site.mjs",
-    "site:preview": "node scripts/site-preview.mjs 4180",
-    "lint": "oxlint --deny-warnings --ignore-pattern site/site.js --ignore-pattern vendor"
+    "site:preview": "node scripts/site-preview.mjs 4181",
+    "lint": "oxlint --deny-warnings --ignore-pattern site/site.js --ignore-pattern site/inbox/demo --ignore-pattern vendor"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",
