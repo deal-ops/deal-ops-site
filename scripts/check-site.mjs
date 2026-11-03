@@ -12,8 +12,9 @@
 // - no page says what it must not (unverifiable claims, "in design", and a private list of terms)
 // - old links to the Toolkit's sections (/#faq-…) have their target on /toolkit/ and none on /
 // - site/site.js is the current build of site-src/site.js and is ≤ 6 KB gzip (handbook §6)
-// - every clip is ≤ 5 s (WCAG 2.2.2: the page has no pause control); read from the MP4's mvhd box, no ffprobe needed
+// - seven step illustrations match their pinned sample data; obsolete clips are rejected
 // - the headers file carries the expected CSP
+import { checkIllustrations, illustrationPattern } from './check-illustrations.mjs'
 import { createHash } from 'node:crypto'
 import { execFileSync } from 'node:child_process'
 import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs'
@@ -85,6 +86,13 @@ try {
   fail(`cannot read the demo snapshot: ${e.message}`)
 }
 const demoCases = new Set(Object.keys(snapshot?.details ?? {}))
+
+// Validate all illustration text before excluding it from the page-level release-figure inventory.
+try {
+  checkIllustrations({ html, css, toolkit: TOOLKIT, inbox: INBOX, snapshot, fail })
+} catch (error) {
+  fail(`cannot validate illustration sources: ${error.message}`)
+}
 
 // ---- K1, K2: every page ----
 const EXTERNAL =
@@ -379,7 +387,13 @@ function faqOf(url, prefix, numbers, count, oneParagraph = true) {
 // ---- K3 for the whole text: every figure on / and /inbox/ is in an inventory with its source ----
 // (quoted UI text is checked by K4; spelled-out amounts of time or shares are not allowed at all)
 {
-  const figures = (h) => plain(h.replace(/&ldquo;[\s\S]*?&rdquo;/g, ' ').replace(/&#\d+;/g, ' ')).matchAll(/£?\d+(?:[.,]\d+)*(?:m|bn|%)?/g)
+  const figures = (h) =>
+    plain(
+      h
+        .replace(illustrationPattern, ' ')
+        .replace(/&ldquo;[\s\S]*?&rdquo;/g, ' ')
+        .replace(/&#\d+;/g, ' '),
+    ).matchAll(/£?\d+(?:[.,]\d+)*(?:m|bn|%)?/g)
   const notesRaw = read(join(INBOX, 'CHANGELOG.md'))
   const shownText = JSON.stringify(snapshot ?? {})
   const toolkitScene = /<figure class="scene"[\s\S]*?<\/figure>/.exec(html['/toolkit/'])?.[0] ?? ''
@@ -488,20 +502,9 @@ try {
 const gz = gzipSync(readFileSync(join(SITE, 'site.js'))).length
 if (gz > 6144) fail(`site/site.js is ${gz} bytes gzip, over 6 KB`)
 
-// clips ≤ 5 s (K10), on every page
-function mp4Seconds(buf) {
-  const i = buf.indexOf('mvhd')
-  if (i < 0) return NaN
-  const v = buf[i + 4]
-  const scale = v === 1 ? buf.readUInt32BE(i + 24) : buf.readUInt32BE(i + 16)
-  const dur = v === 1 ? Number(buf.readBigUInt64BE(i + 28)) : buf.readUInt32BE(i + 20)
-  return dur / scale
-}
+// R14: step cards are set in type; obsolete video assets must not return.
 const clips = walk(SITE).filter((f) => f.endsWith('.mp4'))
-for (const f of clips) {
-  const s = mp4Seconds(readFileSync(f))
-  if (!(s <= 5.05)) fail(`clip ${relative(SITE, f)} is ${s.toFixed(2)} s, over 5 s`)
-}
+if (clips.length) fail('obsolete step clips remain: ' + clips.map((f) => relative(SITE, f)).join(', '))
 
 // headers (K9: one rule for the whole site, unchanged)
 const vercel = JSON.parse(read(join(SITE, 'vercel.json')))
@@ -519,5 +522,5 @@ if (problems.length) {
   process.exit(1)
 }
 console.log(
-  `site check: OK (${Object.keys(PAGES).length} pages, demo v${JSON.parse(read('inbox-demo.lock')).version} locked, ${clips.length} clips ≤ 5 s, script ${gz} bytes gzip)`,
+  `site check: OK (${Object.keys(PAGES).length} pages, demo v${JSON.parse(read('inbox-demo.lock')).version} locked, 7 source-checked illustrations, script ${gz} bytes gzip)`,
 )

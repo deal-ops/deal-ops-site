@@ -176,24 +176,42 @@
                   <div class="media media--sage">
                     <div class="media__stage">
                       <div class="media__glow" aria-hidden="true"></div>
-                      <div class="media__frame">
-                        <picture>
-                          <source srcset="/inbox/media/read-dark-focus.jpg" media="(prefers-color-scheme: dark)" />
-                          <img
-                            src="/inbox/media/read-light-focus.jpg"
-                            width="1280"
-                            height="800"
-                            loading="lazy"
-                            alt="The Case list in the demo: each email with its risk, status, queue and due time."
-                          />
-                        </picture>
-                        <video muted playsinline preload="none" aria-hidden="true" data-video>
-                          <source src="/inbox/media/read-dark-focus.mp4" type="video/mp4" media="(prefers-color-scheme: dark)" />
-                          <source src="/inbox/media/read-light-focus.mp4" type="video/mp4" />
-                        </video>
+                      <div class="media__frame media__frame--illus">
+                        <div
+                          class="illus illus--read"
+                          data-illus="read"
+                          role="img"
+                          aria-label="Four sample emails arrive, then each receives a category and a risk level."
+                        >
+                          <div aria-hidden="true">
+                            <div class="illus__head"><span class="illus__title">Incoming mail</span><span class="illus__count">Read-only</span></div>
+                            <ul class="mail-flow">
+                              <li class="mail-flow__row ia ia--1">
+                                <div class="mail-flow__who"><strong>Amelia Hart</strong><small>E0001</small></div>
+                                <p>Northwind Robotics payment - has it arrived?</p>
+                                <div class="mail-flow__tags ia ia--3"><span>payment_query</span><span class="pill pill--medium">medium</span></div>
+                              </li>
+                              <li class="mail-flow__row ia ia--2">
+                                <div class="mail-flow__who"><strong>Hannah Kowalczyk</strong><small>E0045</small></div>
+                                <p>Passport for KYC</p>
+                                <div class="mail-flow__tags ia ia--4"><span>kyc_documents</span><span class="pill pill--high">high</span></div>
+                              </li>
+                              <li class="mail-flow__row ia ia--3">
+                                <div class="mail-flow__who"><strong>Grace Whitfield</strong><small>E0053</small></div>
+                                <p>Withdrawal - Priya Raman, Northwind Robotics (NW-003)</p>
+                                <div class="mail-flow__tags ia ia--5"><span>withdrawal</span><span class="pill pill--high">high</span></div>
+                              </li>
+                              <li class="mail-flow__row ia ia--4">
+                                <div class="mail-flow__who"><strong>Ethan Clarke</strong><small>E0225</small></div>
+                                <p>Northwind Robotics - change of bank account</p>
+                                <div class="mail-flow__tags ia ia--6"><span>bank_details</span><span class="pill pill--high">high</span></div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <!-- /illus -->
                       </div>
                     </div>
-                    <p class="media__caption">In the local demo: the Case list, each email with its risk, status, queue and due time.</p>
                   </div>
                 </article>
                 <article class="card" id="step-2" data-card data-tone="dark">
@@ -208,24 +226,44 @@
                   <div class="media media--peach">
                     <div class="media__stage">
                       <div class="media__glow" aria-hidden="true"></div>
-                      <div class="media__frame">
-                        <picture>
-                          <source srcset="/inbox/media/understand-dark-focus.jpg" media="(prefers-color-scheme: dark)" />
-                          <img
-                            src="/inbox/media/understand-light-focus.jpg"
-                            width="1280"
-                            height="800"
-                            loading="lazy"
-                            alt="The foot of a Case: the model&rsquo;s category with its reason, then the fields read from the email, each to confirm or edit."
-                          />
-                        </picture>
-                        <video muted playsinline preload="none" aria-hidden="true" data-video>
-                          <source src="/inbox/media/understand-dark-focus.mp4" type="video/mp4" media="(prefers-color-scheme: dark)" />
-                          <source src="/inbox/media/understand-light-focus.mp4" type="video/mp4" />
-                        </video>
+                      <div class="media__frame media__frame--illus">
+                        <div
+                          class="illus illus--understand"
+                          data-illus="understand"
+                          role="img"
+                          aria-label="Amelia transferred £10,000.00 on 20 October 2026 with reference NW-001. Code reads the amount, date and reference. The model classifies it as payment_query with high confidence."
+                        >
+                          <div aria-hidden="true">
+                            <div class="illus__head"><span class="illus__title">Amelia Hart</span><span class="illus__count">E0001</span></div>
+                            <blockquote class="extract__quote">
+                              …I transferred <mark class="hi hi--1">£10,000.00</mark> from my own account on <mark class="hi hi--2">20 October 2026</mark> with
+                              the reference <mark class="hi hi--3">NW-001</mark>…
+                            </blockquote>
+                            <div class="extract ia ia--4">
+                              <p class="illus__label">Read by code</p>
+                              <dl>
+                                <div>
+                                  <dt>amount</dt>
+                                  <dd>£10,000.00</dd>
+                                </div>
+                                <div>
+                                  <dt>payment_date</dt>
+                                  <dd>2026-10-20</dd>
+                                </div>
+                                <div>
+                                  <dt>reference</dt>
+                                  <dd>NW-001</dd>
+                                </div>
+                              </dl>
+                            </div>
+                            <div class="illus__total ia ia--6">
+                              <span>Model</span><span>payment_query <small>(high)</small></span>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- /illus -->
                       </div>
                     </div>
-                    <p class="media__caption">In the local demo: from the email down to the model&rsquo;s category and the fields read from it.</p>
                   </div>
                 </article>
                 <article class="card" id="step-3" data-card data-tone="dark">
@@ -240,24 +278,41 @@
                   <div class="media media--clay">
                     <div class="media__stage">
                       <div class="media__glow" aria-hidden="true"></div>
-                      <div class="media__frame">
-                        <picture>
-                          <source srcset="/inbox/media/check-dark-focus.jpg" media="(prefers-color-scheme: dark)" />
-                          <img
-                            src="/inbox/media/check-light-focus.jpg"
-                            width="1280"
-                            height="800"
-                            loading="lazy"
-                            alt="A change-of-bank-account email rated high by the rules, with its reasons: display name, look-alike domain, first mail from this address."
-                          />
-                        </picture>
-                        <video muted playsinline preload="none" aria-hidden="true" data-video>
-                          <source src="/inbox/media/check-dark-focus.mp4" type="video/mp4" media="(prefers-color-scheme: dark)" />
-                          <source src="/inbox/media/check-light-focus.mp4" type="video/mp4" />
-                        </video>
+                      <div class="media__frame media__frame--illus">
+                        <div
+                          class="illus illus--check"
+                          data-illus="check"
+                          role="img"
+                          aria-label="Sophie Laurent is an authenticated sender, linked to commitment NW-006 and Northwind Robotics. The Toolkit ledger says not received in full. The rules compute medium risk."
+                        >
+                          <div aria-hidden="true">
+                            <div class="illus__head"><span class="illus__title">Linked and checked</span><span class="illus__count">E0024</span></div>
+                            <div class="link-flow">
+                              <div class="link-flow__row ia ia--1">
+                                <span class="link-flow__dot"></span><span class="illus__label">Sender</span>
+                                <div><strong>Sophie Laurent (C006)</strong><small>authenticated sender</small></div>
+                              </div>
+                              <div class="link-flow__row ia ia--2">
+                                <span class="link-flow__dot"></span><span class="illus__label">Commitment</span>
+                                <div><strong>Sophie Laurent</strong><small>NW-006</small></div>
+                              </div>
+                              <div class="link-flow__row ia ia--3">
+                                <span class="link-flow__dot"></span><span class="illus__label">Deal</span>
+                                <div><strong>Northwind Robotics</strong></div>
+                              </div>
+                              <div class="link-flow__row ia ia--4">
+                                <span class="link-flow__dot"></span><span class="illus__label">Ledger</span>
+                                <div><strong>Not received in full (Toolkit ledger)</strong></div>
+                              </div>
+                            </div>
+                            <div class="illus__total ia ia--6">
+                              <span class="pill pill--medium">medium</span><span class="illus__note">computed by the rules: medium</span>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- /illus -->
                       </div>
                     </div>
-                    <p class="media__caption">In the local demo: a change-of-bank-account email, its signals, then the risk the rules set.</p>
                   </div>
                 </article>
                 <article class="card" id="step-4" data-card data-tone="dark">
@@ -272,24 +327,37 @@
                   <div class="media media--sage">
                     <div class="media__stage">
                       <div class="media__glow" aria-hidden="true"></div>
-                      <div class="media__frame">
-                        <picture>
-                          <source srcset="/inbox/media/prepare-dark-focus.jpg" media="(prefers-color-scheme: dark)" />
-                          <img
-                            src="/inbox/media/prepare-light-focus.jpg"
-                            width="1280"
-                            height="800"
-                            loading="lazy"
-                            alt="A reply approved and waiting to be sent by a person, with buttons to copy the recipient, the subject and the text."
-                          />
-                        </picture>
-                        <video muted playsinline preload="none" aria-hidden="true" data-video>
-                          <source src="/inbox/media/prepare-dark-focus.mp4" type="video/mp4" media="(prefers-color-scheme: dark)" />
-                          <source src="/inbox/media/prepare-light-focus.mp4" type="video/mp4" />
-                        </video>
+                      <div class="media__frame media__frame--illus">
+                        <div
+                          class="illus illus--prepare"
+                          data-illus="prepare"
+                          role="img"
+                          aria-label="The payment_received draft tells Amelia her GBP 10,000.00 commitment is paid in full. A person approves the reply and copies the text to send from their own mail client."
+                        >
+                          <div aria-hidden="true">
+                            <div class="illus__head">
+                              <span class="illus__title">Reply prepared</span><span class="illus__count">E0001 · payment_received</span>
+                            </div>
+                            <div class="reply__meta">
+                              <span>To</span><strong>amelia@hartfamily.example</strong><span>Subject</span><strong>Your payment for Northwind Robotics</strong>
+                            </div>
+                            <div class="reply__body ia ia--1">
+                              <p>Dear Amelia Hart,</p>
+                              <p>We have received GBP 10,000.00 for Northwind Robotics (reference NW-001). Your commitment of GBP 10,000.00 is paid in full.</p>
+                            </div>
+                            <div class="reply__approval ia ia--3">
+                              <span class="swap reply__status"
+                                ><span class="swap__a">Draft</span><span class="swap__b">Approved, waiting to be sent by a person</span></span
+                              >
+                            </div>
+                            <div class="reply__copy ia ia--5">
+                              <span class="illus__copy">Copy text<span aria-hidden="true"> ↗</span></span>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- /illus -->
                       </div>
                     </div>
-                    <p class="media__caption">In the local demo: the prepared reply approved, then copied to paste into your own mail client.</p>
                   </div>
                 </article>
               </div>

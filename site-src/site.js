@@ -1,5 +1,5 @@
 // Project website motion (docs/en/SITE_HANDBOOK.md §3.4). The page is complete without this file: it only adds classes and
-// CSS custom properties (through the CSSOM, which the CSP allows; the HTML carries no style attributes) and plays the clips.
+// CSS custom properties (through the CSSOM, which the CSP allows; the HTML carries no style attributes) and starts the step illustrations.
 'use strict'
 
 document.documentElement.classList.add('js')
@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   navPill()
   navTone()
   scrollEffects()
+  stepIllustrations()
   faqOpen()
   menuClose()
   subnavShow()
@@ -45,8 +46,8 @@ function menuClose() {
   })
 }
 
-/** Hero: the phrase turns over letter by letter every 4.5 s, once through and back to the first, then stays still. Held while
-    the pointer is on the title; never under reduced motion. The matching hero panel lifts with each phrase. */
+/** Hero: the phrase turns over letter by letter every 2 s, once through and back to the first, then stays still. Never
+    under reduced motion. The matching hero panel lifts with each phrase. */
 function rotator() {
   const box = document.querySelector('[data-rotator]')
   if (!box) return
@@ -82,12 +83,8 @@ function rotator() {
   items[0].classList.add('is-on')
   // after the entrance, the first panel lifts; once the phrase is back at the start, all three rest level
   if (moving()) setTimeout(() => lightPanel(0), 1600)
-  let held = false
-  const title = box.closest('h1')
-  title.addEventListener('mouseenter', () => (held = true))
-  title.addEventListener('mouseleave', () => (held = false))
   const timer = setInterval(() => {
-    if (held || document.hidden || !moving()) return
+    if (document.hidden || !moving()) return
     const from = items[at]
     at = (at + 1) % items.length
     const to = items[at]
@@ -101,7 +98,7 @@ function rotator() {
       clearInterval(timer)
       setTimeout(() => lightPanel(-1), 2400)
     }
-  }, 4500)
+  }, 2000)
 }
 
 /** Hero illustration: the panel for the phrase the headline shows lifts a little (the rotator calls this). A panel can
@@ -160,7 +157,7 @@ function navTone() {
     const watch = () => {
       if (io) io.disconnect()
       const top = bar.matches('[data-subnav]') ? parseFloat(getComputedStyle(bar).top) || 0 : bar.getBoundingClientRect().top
-      const mid = Math.round(top + bar.offsetHeight / 2)
+      const mid = clamp(Math.round(top + bar.offsetHeight / 2), 0, Math.max(0, innerHeight - 1))
       const under = new Set()
       io = new IntersectionObserver(
         (entries) => {
@@ -194,53 +191,21 @@ function faqOpen() {
   open()
 }
 
-/** Scroll-linked work, done once per frame: the step deck and which clip plays. */
+/** The live site's native scroll-linked deck. Playback is handled separately below. */
 function scrollEffects() {
   const deck = document.querySelector('[data-deck]')
   const cards = deck ? [...deck.querySelectorAll('[data-card]')] : []
   const cardsBox = deck && deck.querySelector('.deck__cards')
   const links = deck ? [...deck.querySelectorAll('[data-deck-link]')] : []
-  const videos = cards.map((c) => c.querySelector('[data-video]'))
-  let visible = new Set()
   let active = -1
   let queued = false
-
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      for (const e of entries)
-        if (e.isIntersecting) visible.add(e.target)
-        else visible.delete(e.target)
-      queue()
-    })
-    videos.forEach((v) => v && io.observe(v))
-  }
-
   const pinned = () => wide.matches && motion.matches
-
-  // Each clip plays once from the start whenever its card becomes the one to watch (pinned: the top card once it is 75 %
-  // up; unpinned: in view), then rests on its last frame. A hidden tab only pauses it, so it resumes
-  // where it was.
-  const turn = new Map()
-  function play(i) {
-    videos.forEach((v, j) => {
-      if (!v) return
-      const mine = visible.has(v) && (pinned() ? j === i : true)
-      if (mine && !turn.get(v)) {
-        v.currentTime = 0
-        if (v.preload === 'none') v.preload = 'auto'
-      }
-      turn.set(v, mine)
-      if (mine && moving() && !document.hidden && !v.ended) v.play().catch(() => {})
-      else v.pause()
-    })
-  }
 
   function frame() {
     queued = false
     if (!deck) return
     if (!pinned()) {
       for (const c of cards) for (const k of ['--ty', '--s', '--dim']) c.style.removeProperty(k)
-      play(-1)
       return
     }
     const rect = deck.getBoundingClientRect()
@@ -257,9 +222,6 @@ function scrollEffects() {
       c.style.setProperty('--dim', Math.min(back, 1).toFixed(3))
     })
     const now = clamp(Math.round(p), 0, cards.length - 1)
-    // the clip to watch: the top card that is at least 75 % up
-    let watch = 0
-    for (let i = 1; i < cards.length; i++) if (p - (i - 1) >= 0.75) watch = i
     links.forEach((a, i) => a.querySelector('.deck__bar > span').style.setProperty('--fill', clamp(p - i + 1, 0, 1).toFixed(3)))
     // aria-current only changes when the step does, so screen readers are not told on every frame
     if (now !== active)
@@ -267,7 +229,6 @@ function scrollEffects() {
         if (i === now) a.setAttribute('aria-current', 'step')
         else a.removeAttribute('aria-current')
       })
-    play(watch)
     active = now
   }
 
@@ -294,4 +255,30 @@ function scrollEffects() {
   document.addEventListener('visibilitychange', queue)
   wide.addEventListener('change', queue)
   queue()
+}
+
+/** Each illustration loops as soon as it intersects the view, regardless of card position or the current step. */
+function stepIllustrations() {
+  const illus = [...document.querySelectorAll('[data-illus]')]
+  if (!('IntersectionObserver' in window)) {
+    illus.forEach((el) => el.classList.add('is-static'))
+    return
+  }
+  const visible = new Set()
+  const update = () => {
+    for (const el of illus) {
+      const shown = visible.has(el)
+      el.classList.toggle('is-on', shown && moving())
+      el.classList.toggle('is-paused', document.hidden || !shown)
+    }
+  }
+  const observer = new IntersectionObserver((entries) => {
+    for (const entry of entries)
+      if (entry.isIntersecting) visible.add(entry.target)
+      else visible.delete(entry.target)
+    update()
+  })
+  illus.forEach((el) => observer.observe(el))
+  document.addEventListener('visibilitychange', update)
+  onMotionChange(update)
 }

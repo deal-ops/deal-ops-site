@@ -177,24 +177,45 @@
                   <div class="media media--peach">
                     <div class="media__stage">
                       <div class="media__glow" aria-hidden="true"></div>
-                      <div class="media__frame">
-                        <picture>
-                          <source srcset="/media/rec-dark-focus.jpg" media="(prefers-color-scheme: dark)" />
-                          <img
-                            src="/media/rec-light-focus.jpg"
-                            width="1280"
-                            height="800"
-                            loading="lazy"
-                            alt="Reconciliation after review: nothing waiting for review, and £6,340.00 of receipts not booked to any investor."
-                          />
-                        </picture>
-                        <video muted playsinline preload="none" aria-hidden="true" data-video>
-                          <source src="/media/rec-dark-focus.mp4" type="video/mp4" media="(prefers-color-scheme: dark)" />
-                          <source src="/media/rec-light-focus.mp4" type="video/mp4" />
-                        </video>
+                      <div class="media__frame media__frame--illus">
+                        <!-- Plan 14 R14 sample: an animated illustration set in type from the sample deal (Toolkit src/lib/sample.ts line t03,
+                             commitment c03; reasons and score as src/lib/reconcile.ts gives them); it plays once when the card is up -->
+                        <div
+                          class="illus illus--reconciliation"
+                          data-illus="reconciliation"
+                          role="img"
+                          aria-label="A £20,000.00 receipt from CHLOE MARTIN with no reference is suggested for Chloe Martin, score 0.55, because the payer name and amount match. A person confirms it; receipts waiting for review go from 3 to 2."
+                        >
+                          <div class="illus__head" aria-hidden="true">
+                            <span class="illus__title">Bank statement</span>
+                            <span class="illus__count"
+                              >Needs your review · <span class="swap"><span class="swap__a">3</span><span class="swap__b">2</span></span></span
+                            >
+                          </div>
+                          <ul class="illus__rows" aria-hidden="true">
+                            <li class="illus__row is-dim">
+                              <span class="illus__who">A HART<small>2026-10-06 · NW-001</small></span
+                              ><span class="illus__amt">£10,000.00</span><span class="pill">Matched</span>
+                            </li>
+                            <li class="illus__row is-focus">
+                              <span class="illus__who">CHLOE MARTIN<small>2026-10-07 · no reference</small></span
+                              ><span class="illus__amt">£20,000.00</span
+                              ><span class="pill illus__state"><span class="swap__a">Review</span><span class="swap__b">Confirmed</span></span>
+                              <span class="illus__suggest">
+                                <span class="illus__match">Chloe Martin<small>NW-003</small></span>
+                                <span class="illus__why">score 0.55 — payer name matches, amount matches</span>
+                                <span class="illus__btn"><span class="swap__a">Confirm</span><span class="swap__b">&#10003; Confirmed by a person</span></span>
+                              </span>
+                            </li>
+                            <li class="illus__row is-dim">
+                              <span class="illus__who">D KIM<small>2026-10-07 · NW-004</small></span
+                              ><span class="illus__amt">£2,000.00</span><span class="pill">Matched</span>
+                            </li>
+                          </ul>
+                        </div>
+                        <!-- /illus -->
                       </div>
                     </div>
-                    <p class="media__caption">In the app: three suggested matches confirmed, and the summary updates.</p>
                   </div>
                 </article>
 
@@ -207,24 +228,35 @@
                   <div class="media media--sage">
                     <div class="media__stage">
                       <div class="media__glow" aria-hidden="true"></div>
-                      <div class="media__frame">
-                        <picture>
-                          <source srcset="/media/alloc-dark-focus.jpg" media="(prefers-color-scheme: dark)" />
-                          <img
-                            src="/media/alloc-light-focus.jpg"
-                            width="1280"
-                            height="800"
-                            loading="lazy"
-                            alt="The per-investor allocation table: received, invested, shares, fees and refunds."
-                          />
-                        </picture>
-                        <video muted playsinline preload="none" aria-hidden="true" data-video>
-                          <source src="/media/alloc-dark-focus.mp4" type="video/mp4" media="(prefers-color-scheme: dark)" />
-                          <source src="/media/alloc-light-focus.mp4" type="video/mp4" />
-                        </video>
+                      <div class="media__frame media__frame--illus">
+                        <div
+                          class="illus illus--allocation"
+                          data-illus="allocation"
+                          role="img"
+                          aria-label="Closing allocation with a 3% platform fee. £100,395.00 is invested and £98,895.00 is wired to the company."
+                        >
+                          <div aria-hidden="true">
+                            <div class="illus__head">
+                              <span class="illus__title">Closing allocation</span><span class="illus__count">Platform fee · 3%</span>
+                            </div>
+                            <div class="alloc">
+                              <div class="alloc__labels"><span>Investor</span><span>Received</span><span>Fee</span><span>Invested</span></div>
+                              <div class="alloc__row ia ia--1">
+                                <span>Amelia Hart</span><span>£10,000.00</span><span>£300.00</span><strong>£9,700.00</strong>
+                              </div>
+                              <div class="alloc__row ia ia--2"><span>Ben Okafor</span><span>£5,000.00</span><span>£150.00</span><strong>£4,850.00</strong></div>
+                              <div class="alloc__row ia ia--3">
+                                <span>Chloe Martin</span><span>£20,000.00</span><span>£600.00</span><strong>£19,400.00</strong>
+                              </div>
+                              <div class="alloc__row ia ia--4"><span>David Kim</span><span>£2,000.00</span><span>£60.00</span><strong>£1,940.00</strong></div>
+                            </div>
+                            <p class="illus__note ia ia--5">and 7 more investors · £100,395.00 invested</p>
+                            <div class="illus__total ia ia--6"><span>Wire to company</span><strong>£98,895.00</strong></div>
+                          </div>
+                        </div>
+                        <!-- /illus -->
                       </div>
                     </div>
-                    <p class="media__caption">In the app: the closing totals, then each investor's line.</p>
                   </div>
                 </article>
 
@@ -237,26 +269,48 @@
                   <div class="media media--clay">
                     <div class="media__stage">
                       <div class="media__glow" aria-hidden="true"></div>
-                      <div class="media__frame">
-                        <picture>
-                          <source srcset="/media/exit-dark-focus.jpg" media="(prefers-color-scheme: dark)" />
-                          <img
-                            src="/media/exit-light-focus.jpg"
-                            width="1280"
-                            height="800"
-                            loading="lazy"
-                            alt="The exit waterfall for £390,000 of proceeds: £57,021 of carry and £328,479 to investors."
-                          />
-                        </picture>
-                        <video muted playsinline preload="none" aria-hidden="true" data-video>
-                          <source src="/media/exit-dark-focus.mp4" type="video/mp4" media="(prefers-color-scheme: dark)" />
-                          <source src="/media/exit-light-focus.mp4" type="video/mp4" />
-                        </video>
+                      <div class="media__frame media__frame--illus">
+                        <div
+                          class="illus illus--exit"
+                          data-illus="exit"
+                          role="img"
+                          aria-label="A £390,000 exit less £4,500 costs: capital, preferred return, lead catch-up and the carry split are distributed in order. Investors receive £328,479.00; carry to the lead is £57,021.00."
+                        >
+                          <div aria-hidden="true">
+                            <div class="illus__head"><span class="illus__title">Exit waterfall</span><span class="illus__count">£390,000 exit</span></div>
+                            <p class="illus__note">20% carry · 8% hurdle · 6 years · full catch-up</p>
+                            <p class="illus__note">£4,500 exit costs first · £385,500 to share</p>
+                            <div class="exit-flow">
+                              <div class="exit-flow__row ia ia--1">
+                                <div><span>Return of capital</span><strong>£100,395.00</strong></div>
+                                <div class="exit-flow__track"><span class="exit-flow__bar exit-flow__bar--capital"></span></div>
+                                <small>→ investors</small>
+                              </div>
+                              <div class="exit-flow__row ia ia--2">
+                                <div><span>Preferred return</span><strong>£58,919.25</strong></div>
+                                <div class="exit-flow__track"><span class="exit-flow__bar exit-flow__bar--hurdle"></span></div>
+                                <small>→ investors</small>
+                              </div>
+                              <div class="exit-flow__row ia ia--3">
+                                <div><span>Lead catch-up</span><strong>£14,729.81</strong></div>
+                                <div class="exit-flow__track"><span class="exit-flow__bar exit-flow__bar--catchup"></span></div>
+                                <small>→ lead</small>
+                              </div>
+                              <div class="exit-flow__row ia ia--4">
+                                <div><span>Carry split 80 / 20</span><strong>£211,455.94</strong></div>
+                                <div class="exit-flow__track"><span class="exit-flow__bar exit-flow__bar--split"></span></div>
+                                <small>→ investors 80% · lead 20%</small>
+                              </div>
+                            </div>
+                            <div class="illus__total exit-flow__total ia ia--6">
+                              <span>Investors<strong>£328,479.00</strong></span
+                              ><span>Carry to the lead<strong>£57,021.00</strong></span>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- /illus -->
                       </div>
                     </div>
-                    <p class="media__caption">
-                      In the app: exit proceeds changed from £250,000 to £390,000; the carry to the lead and the investors' share update.
-                    </p>
                   </div>
                 </article>
               </div>
