@@ -72,6 +72,32 @@ const plain = (h) =>
     .replace(/\s+/g, ' ')
 const idsOf = (h) => [...h.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1])
 const esc = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+// Current trust figures must come from the pinned release, never an older CHANGELOG section.
+const inboxVersion = JSON.parse(read(join(INBOX, 'package.json'))).version
+const releaseSection = (notes, v) => (new RegExp(`^## v${esc(v)}\\b[\\s\\S]*?(?=^## |(?![\\s\\S]))`, 'm').exec(notes) ?? [''])[0]
+const inboxNotesRaw = read(join(INBOX, 'CHANGELOG.md'))
+const currentInboxNotes = releaseSection(inboxNotesRaw, inboxVersion)
+if (!currentInboxNotes) fail(`Inbox release notes have no section for v${inboxVersion}`)
+const metricCell = (label) => {
+  const cell = new RegExp(`^\\s*\\| ${esc(label)} \\|[^|]+\\|\\s*([^|]+)\\|`, 'm').exec(currentInboxNotes)?.[1]?.trim()
+  if (!cell) fail(`Inbox v${inboxVersion}: missing metric ${label}`)
+  return cell ?? ''
+}
+const fractionFigure = (label) => {
+  const m = /^100% \((\d+)\/(\d+)\)$/.exec(metricCell(label))
+  if (!m || m[1] !== m[2] || Number(m[2]) === 0) {
+    fail(`Inbox v${inboxVersion}: ${label} is not a measured perfect-recall fraction`)
+    return ''
+  }
+  return `${m[1]} / ${m[2]}`
+}
+const inboxTrust = {
+  high: fractionFigure('High-risk emails rated high'),
+  malicious: fractionFigure('Emails annotated as malicious bank-detail changes or look-alike senders rated high'),
+  injection: fractionFigure('Prompt injection does not change the judgement (vs. a clean twin)'),
+  classification: metricCell('Classification, macro F1 (¹)'),
+}
+if (!/^0\.\d{3}$|^1\.000$/.test(inboxTrust.classification)) fail(`Inbox v${inboxVersion}: invalid classification figure`)
 const stripComments = (t) => t.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[\s;{}(),])\/\/.*$/gm, '$1')
 const walk = (d) => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(d, e.name)) : [join(d, e.name)]))
 
@@ -269,27 +295,18 @@ function faqOf(url, prefix, numbers, count, oneParagraph = true) {
   const page = html['/inbox/']
   const text = plain(page)
   // K3 (P9): every figure on the page is backed by the Inbox release notes (CHANGELOG.md at inbox.ref)
-  const notes = plain(read(join(INBOX, 'CHANGELOG.md')).replace(/\*\*/g, ''))
-  const figures = [
-    ['57 / 57', /High-risk emails rated high \| 100% \| 100% \(57\/57\)/],
-    ['12 / 12', /look-alike senders rated high \| 100% \| 100% \(12\/12\)/],
-    ['7 / 7', /Prompt injection does not change the judgement \(vs\. a clean twin\) \| 100% \| 100% \(7\/7\)/],
-    ['0.946', /Classification, macro F1 \(¹\) \| ≥ 0\.85 \| 0\.946/],
-  ]
+  const allNotes = plain(inboxNotesRaw.replace(/\*\*/g, ''))
+  const figures = Object.values(inboxTrust)
   const dts = [...page.matchAll(/<dt>([^<]*\d[^<]*)<\/dt>/g)].map((m) => m[1])
-  for (const d of dts) if (!figures.some(([f]) => f === d)) fail(`/inbox/: figure ${d} has no release-notes backing in the check`)
-  for (const [shown, backed] of figures) {
-    if (!dts.includes(shown)) fail(`/inbox/ trust figure ${shown} not on the page as expected`)
-    if (!backed.test(notes)) fail(`/inbox/ trust figure ${shown} is not backed by the Inbox CHANGELOG.md`)
-  }
+  if (dts.length !== figures.length || dts.some((d, i) => d !== figures[i]))
+    fail(`/inbox/: trust figures differ from the measured v${inboxVersion} release`)
   const note = plain(/<p class="trust__note">([\s\S]*?)<\/p>/.exec(/<section class="trust"[\s\S]*?<\/section>/.exec(page)?.[0] ?? '')?.[1] ?? '')
-  for (const [n] of note.matchAll(/\d[\d,.]*\d|\d/g))
-    if (
-      !{ '0.1.0': /^## v0\.1\.0/m, '0.1.1': /^## v0\.1\.1/m, 121: /held-out set of 121 emails/, 5.5: /Claude Opus 5\.5/ }[n]?.test(
-        read(join(INBOX, 'CHANGELOG.md')),
-      )
-    )
-      fail(`/inbox/ trust note: ${n} is not backed by the Inbox CHANGELOG.md`)
+  if (!note.includes(`v${inboxVersion} release checks`)) fail('/inbox/: trust note does not name the current release')
+  for (const [n] of note.matchAll(/\d[\d,.]*\d|\d/g)) {
+    const proof = n === inboxVersion ? new RegExp(`^## v${esc(inboxVersion)}\\b`, 'm')
+      : { 121: /held-out set of 121 emails/, 5.5: /Claude Opus 5\.5/ }[n]
+    if (!proof?.test(currentInboxNotes)) fail(`/inbox/ trust note: ${n} is not backed by the current Inbox release`)
+  }
   // N15: the problem section quotes figures from an external report; they were checked against the report itself
   // (UK Finance, Annual Fraud Report 2026, p. 42: invoice & mandate scam, value £41.3m, 68 per cent on non-personal
   // accounts), so only those figures may appear there, and only with the source line
@@ -304,12 +321,12 @@ function faqOf(url, prefix, numbers, count, oneParagraph = true) {
     'Microsoft 365 and Gmail push notifications (Pub/Sub) were tested only against simulated services.',
     'Gmail polling was tested on one personal Gmail account.',
   ]) {
-    if (!notes.includes(s)) fail(`the Inbox CHANGELOG.md no longer says: ${s}`)
+    if (!allNotes.includes(s)) fail(`the Inbox CHANGELOG.md no longer says: ${s}`)
     if (!text.includes(s)) fail(`/inbox/ does not carry the release notes' sentence: ${s}`)
   }
   // and every sentence on the page about how a mailbox kind was tested is one of them
   for (const t of text.split(/(?<=\.)\s+/))
-    if (/\btested\b/.test(t) && /Gmail|Microsoft 365|Pub\/Sub|IMAP/.test(t) && !notes.includes(t.trim()))
+    if (/\btested\b/.test(t) && /Gmail|Microsoft 365|Pub\/Sub|IMAP/.test(t) && !allNotes.includes(t.trim()))
       fail(`/inbox/: "${t.trim()}" is not the release notes' wording`)
   // K4: a quoted phrase is, whole, Inbox on-screen text: a string literal or a JSX text run in src/web (not tests, comments
   // removed), or a value shown in the demo snapshot. "Whole" means the entire literal or text run, or one or more complete
@@ -380,8 +397,8 @@ function faqOf(url, prefix, numbers, count, oneParagraph = true) {
     (m) => m.slice(1).join(' '),
   )
   if (cfgClasses.length < 1 || cfgClasses.join('|') !== pageClasses.join('|')) fail('/inbox/: the category table differs from config/default/cases.yaml')
-  // FAQ: current version 0.1.1 and evaluation version 0.1.0, Apache-2.0, MT103, pacs.008 and Microsoft 365 are the only numbers
-  faqOf('/inbox/', 'ifaq', ['0.1.0', '0.1.1', '2.0', '103', '008', '365'], 14)
+  // FAQ: only the current release, Apache-2.0, MT103, pacs.008 and Microsoft 365 are numbers.
+  faqOf('/inbox/', 'ifaq', [inboxVersion, '2.0', '103', '008', '365'], 14)
 }
 
 // ---- K3 for the whole text: every figure on / and /inbox/ is in an inventory with its source ----
@@ -394,38 +411,31 @@ function faqOf(url, prefix, numbers, count, oneParagraph = true) {
         .replace(/&ldquo;[\s\S]*?&rdquo;/g, ' ')
         .replace(/&#\d+;/g, ' '),
     ).matchAll(/£?\d+(?:[.,]\d+)*(?:m|bn|%)?/g)
-  const notesRaw = read(join(INBOX, 'CHANGELOG.md'))
   const shownText = JSON.stringify(snapshot ?? {})
   const toolkitScene = /<figure class="scene"[\s\S]*?<\/figure>/.exec(html['/toolkit/'])?.[0] ?? ''
   const numbering = ['01', '02', '03', '04', '05', '06', '1', '2', '3', '4']
-  const names = { 365: 'Microsoft 365', 103: 'MT103', '008': 'pacs.008', '2.0': 'Apache-2.0', '0.1.0': 'the evaluation version', '0.1.1': 'the current version' }
-  const INBOX_FIGURES = {
-    // release notes (also checked line by line in K3 above)
-    57: /100% \(57\/57\)/,
-    12: /100% \(12\/12\)/,
-    7: /100% \(7\/7\)/,
-    0.946: /\| 0\.946/,
-    121: /held-out set of 121 emails/,
-    5.5: /Claude Opus 5\.5/,
-  }
+  const names = { 365: 'Microsoft 365', 103: 'MT103', '008': 'pacs.008', '2.0': 'Apache-2.0', [inboxVersion]: 'the current measured version' }
+  // Each trust value is already parsed and validated against its current release metric above.
+  const releaseFigureNumbers = new Set(Object.values(inboxTrust).flatMap((value) => value.split(' / ')))
+  const INBOX_FIGURES = { 121: /held-out set of 121 emails/, 5.5: /Claude Opus 5\.5/ }
   for (const [n] of figures(html['/inbox/'])) {
     if (numbering.includes(n) || names[n]) continue
     if (['£41.3m', '68%', '2025', '2026'].includes(n)) continue // the problem section's report figures, checked above
+    if (releaseFigureNumbers.has(n)) continue
     if (INBOX_FIGURES[n]) {
-      if (!INBOX_FIGURES[n].test(notesRaw)) fail(`/inbox/: figure ${n} is no longer in the Inbox CHANGELOG.md`)
+      if (!INBOX_FIGURES[n].test(currentInboxNotes)) fail(`/inbox/: figure ${n} is no longer in the Inbox CHANGELOG.md`)
       continue
     }
     if (n === '4893' && shownText.includes('"ending 4893"')) continue // demo sample E0225, as shown
     fail(`/inbox/: figure ${n} is not in the inventory of backed figures`)
   }
   const toolkitNotes = read(join(TOOLKIT, 'docs/RELEASE_NOTES.md'))
-  const section = (notes, v) => (new RegExp(`^## v${esc(v)}\\b[\\s\\S]*?(?=^## |(?![\\s\\S]))`, 'm').exec(notes) ?? [''])[0]
   const MODULE_PROOF = {
-    toolkit: { figure: '1,800', release: '1.2.1', backed: () => /agree with it on 1,800 generated cases/.test(section(toolkitNotes, '1.2.1')) },
+    toolkit: { figure: '1,800', release: '1.2.1', backed: () => /agree with it on 1,800 generated cases/.test(releaseSection(toolkitNotes, '1.2.1')) },
     inbox: {
-      figure: '57 / 57',
-      release: '0.1.0',
-      backed: () => /100% \(57\/57\)/.test(section(notesRaw, '0.1.0')),
+      figure: inboxTrust.high,
+      release: inboxVersion,
+      backed: () => Boolean(inboxTrust.high),
     },
   }
   const modules = [...html['/'].matchAll(/<article class="module module--([a-z]+)"[^>]*>([\s\S]*?)<\/article>/g)]
@@ -444,7 +454,7 @@ function faqOf(url, prefix, numbers, count, oneParagraph = true) {
     if (plain(toolkitScene).includes(n)) continue
     fail(`/: figure ${n} is not in the inventory of backed figures`)
   }
-  const OWN = { toolkit: ['1,800', '1.2.1'], inbox: ['57', '0.1.0'] }
+  const OWN = { toolkit: ['1,800', '1.2.1'], inbox: [...inboxTrust.high.split(' / '), inboxVersion] }
   for (const [, mod, body] of modules)
     for (const [n] of figures(body))
       if (!numbering.includes(n) && !(OWN[mod] ?? []).includes(n)) fail(`/: figure ${n} in the ${mod} column is not that module's figure`)

@@ -392,19 +392,19 @@
           <h2 class="eyebrow section-label" id="trust-h">Why trust the results</h2>
           <dl class="facts">
             <div class="fact" data-reveal>
-              <dt>57 / 57</dt>
+              <dt>79 / 79</dt>
               <dd>High-risk emails rated high, on emails development never read.</dd>
             </div>
             <div class="fact" data-reveal>
-              <dt>12 / 12</dt>
+              <dt>25 / 25</dt>
               <dd>Malicious bank-detail changes and look-alike senders rated high.</dd>
             </div>
             <div class="fact" data-reveal>
-              <dt>7 / 7</dt>
+              <dt>15 / 15</dt>
               <dd>Prompt-injection emails judged the same as their clean twins.</dd>
             </div>
             <div class="fact" data-reveal>
-              <dt>0.946</dt>
+              <dt>0.965</dt>
               <dd>
                 Classification score (macro F1), over the categories whose risk floor is not high, without unclassified and categories with no example in the
                 set.
@@ -412,8 +412,8 @@
             </div>
           </dl>
           <p class="trust__note">
-            v0.1.0 release checks: 121 held-out fictional emails, one run with a real model (Claude Opus 5.5) by an independent runner.<br />
-            Measured on v0.1.0; v0.1.1 reports no new held-out measurement. A person still reviews every Case and reply.
+            v0.2.0 release checks: 121 held-out fictional emails, one run with a real model (Claude Opus 5.5) by an independent runner.<br />
+            Measured on v0.2.0 using a newly written held-out set. A person still reviews every Case and reply.
           </p>
         </div>
       </section>
@@ -660,11 +660,11 @@
         </p>
         <p class="built__links">
           <a href="https://github.com/deal-ops/deal-ops-inbox/blob/main/docs/en/quickstart.md">Quick start <span class="arrow" aria-hidden="true">→</span></a>
-          <a href="https://github.com/deal-ops/deal-ops-inbox/releases/tag/v0.1.1">Release notes <span class="arrow" aria-hidden="true">→</span></a>
-          <a href="https://github.com/deal-ops/deal-ops-inbox/releases/download/v0.1.1/deal-ops-inbox-demo-v0.1.1.tar.gz"
+          <a href="https://github.com/deal-ops/deal-ops-inbox/releases/tag/v0.2.0">Release notes <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="https://github.com/deal-ops/deal-ops-inbox/releases/download/v0.2.0/deal-ops-inbox-demo-v0.2.0.tar.gz"
             >Demo package <span class="arrow" aria-hidden="true">→</span></a
           >
-          <a href="https://github.com/deal-ops/deal-ops-inbox/releases/download/v0.1.1/deal-ops-inbox-demo-v0.1.1.tar.gz.sha256"
+          <a href="https://github.com/deal-ops/deal-ops-inbox/releases/download/v0.2.0/deal-ops-inbox-demo-v0.2.0.tar.gz.sha256"
             >Package checksum <span class="arrow" aria-hidden="true">→</span></a
           >
         </p>
@@ -760,8 +760,10 @@
               <summary>What happens to passports and other ID documents?</summary>
               <p>
                 Code decides whether an attachment may be a KYC document: by its file name, by its text (such as a passport machine-readable line), or because
-                it is an image, a scan or cannot be checked. Its content is never sent to any model, local or hosted. It is transferred to your own KYC folder
-                or webhook and then removed from the app.
+                it is an image, a scan or cannot be checked. A narrow, configurable exception keeps small inline signature images only when strict structural
+                checks pass; images are never read or sent to any model. A reduced ID image or data in permitted image metadata can meet that exception and stay
+                in the archive. Other possible KYC content is never sent to any model, local or hosted; it is transferred to your own KYC folder or webhook and
+                then removed from the app. The release notes and data-protection templates explain this tradeoff.
               </p>
             </details>
             <details class="faq__item" id="ifaq-stored">
@@ -789,15 +791,15 @@
               <p>
                 The rules are compared with an independent Python implementation, and mutation checks test the tests. Fictional test emails were written by
                 independent agents that saw only the requirements: a development set, run in CI on recorded model replies, and a separate held-out set that
-                development never read, run once with a real model for v0.1.0. No new held-out measurement is reported for v0.1.1. The results are
+                development never read, newly written for v0.2.0 and run once with a real model. The results are
                 <a href="#trust">on this page</a> and in the release notes.
               </p>
             </details>
             <details class="faq__item" id="ifaq-ready">
               <summary>Is it ready for real mailboxes?</summary>
               <p>
-                It is version 0.1.1: only what is built and tested is described here, and the
-                <a href="https://github.com/deal-ops/deal-ops-inbox/releases/tag/v0.1.1">release notes</a> list its limits; for example, it has not been tested
+                It is version 0.2.0: only what is built and tested is described here, and the
+                <a href="https://github.com/deal-ops/deal-ops-inbox/releases/tag/v0.2.0">release notes</a> list its limits; for example, it has not been tested
                 with real production mail volumes. Read the security model and fill in the DPIA and LIA templates before connecting a real mailbox. Report
                 problems by <a href="mailto:haixiangyuann@gmail.com">email</a>, without real investor details.
               </p>
@@ -833,7 +835,7 @@
             <li><a href="https://github.com/deal-ops/deal-ops-toolkit">Toolkit on GitHub</a></li>
             <li><a href="https://github.com/deal-ops/deal-ops-toolkit/blob/main/docs/RELEASE_NOTES.md">Toolkit release notes</a></li>
             <li><a href="https://github.com/deal-ops/deal-ops-inbox">Inbox on GitHub</a></li>
-            <li><a href="https://github.com/deal-ops/deal-ops-inbox/releases/tag/v0.1.1">Inbox release notes</a></li>
+            <li><a href="https://github.com/deal-ops/deal-ops-inbox/releases/tag/v0.2.0">Inbox release notes</a></li>
           </ul>
         </div>
         <div>
