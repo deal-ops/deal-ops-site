@@ -241,7 +241,7 @@ export function checkIllustrations({ html, css, toolkit, inbox, snapshot, fail }
     exit: `A ${pounds(terms.proceeds)} exit less ${pounds(exit.costsPaid)} costs: capital, preferred return, lead catch-up and the carry split are distributed in order. Investors receive ${money(exit.investorsTotal)}; carry to the lead is ${money(exit.carry)}.`,
     read: 'Four sample emails arrive, then each receives a category and a risk level.',
     understand: `${email.fromName.split(' ')[0]} transferred ${fields.amount} on ${dateText} with reference ${fields.reference}. Code reads the amount, date and reference. The model classifies it as ${label.classId} with ${label.confidence} confidence.`,
-    check: `${links.contact.name} is an authenticated sender, linked to commitment ${links.commitment.reference} and ${links.deal}. Goten ledger says not received in full. The rules compute ${checked.e3.risk.computed} risk.`,
+    check: `${links.contact.name} is an authenticated sender, linked to commitment ${links.commitment.reference} and ${links.deal}. Imported Goten ledger says not fully received. The rules compute ${checked.e3.risk.computed} risk.`,
     prepare: `The ${reply.templateId} draft tells ${email.fromName.split(' ')[0]} her ${replyMoney} commitment is paid in full. A person approves the reply and copies the text to send from their own mail client.`,
   }
   const keys = { '/toolkit/': ['reconciliation', 'allocation', 'exit'], '/inbox/': ['read', 'understand', 'check', 'prepare'] }

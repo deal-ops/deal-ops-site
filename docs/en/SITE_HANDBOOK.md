@@ -256,3 +256,7 @@ Type only, no cards: large figures under hairlines; centred privacy statement; f
 ## Trunks v0.2.1 release integration · 2026-11-04
 
 The official Inbox source pin, demo package and current release links move to v0.2.1. Existing routes, Vegeta presentation and interactions remain unchanged. The published evaluation figures were measured on v0.2.0 and carried forward; both overview and Inbox trust copy identify that measurement version. The source guard enforces exact metric-table equality and attribution. The demo is installed only through its authenticated release archive and integrity lock. Publication follows the product release and green private/public CI.
+
+## Trunks v0.2.2 official demo integration · 2026-11-04
+
+Update the official source pin, source-bound demo archive and integrity lock, current release links and the quoted ledger display text. Evaluation figures remain attributed to v0.2.0. Historical release assets and the Goten pin are preserved. About, KYC, verification and navigation changes come from the official v0.2.2 product package; package files are not hand-edited. Product publication and green CI on the exact curated release source precede the production release fast-forward and live file/header/browser checks.
