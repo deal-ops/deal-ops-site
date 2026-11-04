@@ -203,7 +203,7 @@ if (!PRIVACY || !DISCLAIMER) fail("cannot read PRIVACY_TEXT / DISCLAIMER_TEXT fr
 const footerText = plain([...footers][0] ?? '')
 if (!footerText.includes(DISCLAIMER ?? '\0')) fail('footer does not carry DISCLAIMER_TEXT word for word')
 if (!footerText.includes('Not affiliated with any platform')) fail('footer: "Not affiliated with any platform" missing')
-if (!footerText.includes('Deal Ops is open-source software, not a regulated service.')) fail('footer: the software statement (N28) is missing')
+if (!footerText.includes('Vegeta is open-source software, not a regulated service.')) fail('footer: the software statement (N28) is missing')
 const privacyBody = plain(/<p class="privacy__body"[^>]*>([\s\S]*?)<\/p>/.exec(html['/toolkit/'])?.[1] ?? '').trim()
 if (privacyBody !== PRIVACY) fail('/toolkit/: the privacy section does not carry PRIVACY_TEXT word for word')
 
@@ -298,13 +298,11 @@ function faqOf(url, prefix, numbers, count, oneParagraph = true) {
   const allNotes = plain(inboxNotesRaw.replace(/\*\*/g, ''))
   const figures = Object.values(inboxTrust)
   const dts = [...page.matchAll(/<dt>([^<]*\d[^<]*)<\/dt>/g)].map((m) => m[1])
-  if (dts.length !== figures.length || dts.some((d, i) => d !== figures[i]))
-    fail(`/inbox/: trust figures differ from the measured v${inboxVersion} release`)
+  if (dts.length !== figures.length || dts.some((d, i) => d !== figures[i])) fail(`/inbox/: trust figures differ from the measured v${inboxVersion} release`)
   const note = plain(/<p class="trust__note">([\s\S]*?)<\/p>/.exec(/<section class="trust"[\s\S]*?<\/section>/.exec(page)?.[0] ?? '')?.[1] ?? '')
   if (!note.includes(`v${inboxVersion} release checks`)) fail('/inbox/: trust note does not name the current release')
   for (const [n] of note.matchAll(/\d[\d,.]*\d|\d/g)) {
-    const proof = n === inboxVersion ? new RegExp(`^## v${esc(inboxVersion)}\\b`, 'm')
-      : { 121: /held-out set of 121 emails/, 5.5: /Claude Opus 5\.5/ }[n]
+    const proof = n === inboxVersion ? new RegExp(`^## v${esc(inboxVersion)}\\b`, 'm') : { 121: /held-out set of 121 emails/, 5.5: /Claude Opus 5\.5/ }[n]
     if (!proof?.test(currentInboxNotes)) fail(`/inbox/ trust note: ${n} is not backed by the current Inbox release`)
   }
   // N15: the problem section quotes figures from an external report; they were checked against the report itself

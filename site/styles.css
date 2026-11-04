@@ -356,6 +356,18 @@ a:hover > .arrow {
 .hero__line {
   display: block;
 }
+.hero--overview .rot {
+  color: var(--soft);
+}
+/* Keep the approved long phrases complete at the shared title size. */
+@media (max-width: 1800px) {
+  .hero--overview .rot {
+    height: 1.94em;
+  }
+  .hero--overview .rot__item > span {
+    display: block;
+  }
+}
 .rot {
   position: relative;
   height: 0.97em;
@@ -1376,8 +1388,8 @@ a:hover > .arrow {
 /* the wordmark sits last, nearly full width, fading down and cut off by the page's bottom edge (a watermark, not a heading) */
 .footer__mark {
   margin: clamp(48px, 8vh, 80px) 0 -0.14em -0.04em;
-  /* "Deal Ops" is about 3.97 times as wide as its size (measured 2026-11-03): this spans the gutters (scrollbar width left as slack) */
-  font-size: calc((100vw - 2 * var(--gutter)) / 4.15);
+  /* Vegeta spans the available width with room for the scrollbar and letter edges. */
+  font-size: calc((100vw - 2 * var(--gutter)) / 3.25);
   font-weight: 500;
   line-height: 0.95;
   letter-spacing: -0.045em;
@@ -1782,7 +1794,7 @@ html:not(.js) .subnav {
     font-size: 13px;
   }
 }
-/* the logo: a D with a round counter (plan 14 R11); it takes the text colour, so it follows the nav into dark sections */
+/* The Vegeta V takes the text colour, so it follows the nav into dark sections. */
 .logo {
   flex: none;
   width: 18px;
@@ -2863,7 +2875,7 @@ html:not(.js) .subnav {
   border-left: 1px solid rgba(255, 255, 255, 0.12);
 }
 .module__runs {
-  margin: 0 0 18px;
+  margin: 18px 0 0;
   color: rgba(246, 248, 243, 0.6);
   font: 500 12px/1 var(--mono);
   letter-spacing: 0.12em;
@@ -2887,6 +2899,12 @@ html:not(.js) .subnav {
   font-weight: 500;
   line-height: 0.95;
   letter-spacing: -0.04em;
+}
+.module__type {
+  margin: 12px 0 0;
+  color: var(--ink-text);
+  font-size: 16px;
+  font-weight: 500;
 }
 .module__lede {
   max-width: 28ch;

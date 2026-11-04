@@ -4,12 +4,32 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
-    <title>Deal Ops Toolkit: SPV deal operations, to the penny</title>
+    <title>Goten — Deal Calculations | Vegeta</title>
     <meta
       name="description"
-      content="A browser tool for SPV deal operations: match bank receipts to commitments, work out the closing allocation, and split exit proceeds with carry and a hurdle. A working prototype."
+      content="Goten by Vegeta: reconcile payments, calculate closing allocations and exit distributions for SPV and syndicate deals. Free, open-source software that runs in your browser."
     />
-    <link rel="icon" href="/favicon-d.svg" type="image/svg+xml" />
+    <meta property="og:site_name" content="Vegeta" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Goten — Deal Calculations | Vegeta" />
+    <meta
+      property="og:description"
+      content="Goten by Vegeta: reconcile payments, calculate closing allocations and exit distributions for SPV and syndicate deals. Free, open-source software that runs in your browser."
+    />
+    <meta property="og:url" content="https://deal-ops-toolkit-site.vercel.app/toolkit/" />
+    <meta property="og:image" content="https://deal-ops-toolkit-site.vercel.app/img/vegeta-share.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Vegeta — SPV and syndicate operations software. Goten: Deal Calculations. Trunks: Operations Inbox." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Goten — Deal Calculations | Vegeta" />
+    <meta
+      name="twitter:description"
+      content="Goten by Vegeta: reconcile payments, calculate closing allocations and exit distributions for SPV and syndicate deals. Free, open-source software that runs in your browser."
+    />
+    <meta name="twitter:image" content="https://deal-ops-toolkit-site.vercel.app/img/vegeta-share.png" />
+    <meta name="twitter:image:alt" content="Vegeta — SPV and syndicate operations software. Goten: Deal Calculations. Trunks: Operations Inbox." />
+    <link rel="icon" href="/favicon-v.svg" type="image/svg+xml" />
     <link rel="preload" href="/fonts/inter-latin-wght.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/plex-mono-latin-500.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css" />
@@ -22,23 +42,23 @@
     <header class="nav" data-nav>
       <a class="nav__brand glass" href="/"
         ><svg class="logo" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-          <path fill="currentColor" fill-rule="evenodd" d="M6 4h9a12 12 0 0 1 0 24H6zM15 11a5 5 0 1 0 0 10a5 5 0 1 0 0-10z" /></svg
-        >Deal Ops</a
+          <path fill="currentColor" d="M4 5h7l5 16 5-16h7L18 28h-4z" /></svg
+        >Vegeta</a
       >
-      <nav class="nav__links glass" aria-label="Deal Ops" data-nav-links>
+      <nav class="nav__links glass" aria-label="Vegeta" data-nav-links>
         <span class="nav__pill" aria-hidden="true" data-nav-pill></span>
-        <a href="/toolkit/" aria-current="page">Toolkit</a>
-        <a href="/inbox/">Inbox</a>
-        <a href="/#build">How we build</a>
+        <a href="/toolkit/" aria-current="page">Goten</a>
+        <a href="/inbox/">Trunks</a>
+        <a href="/#build">Why trust it</a>
         <a href="/#faq">FAQ</a>
       </nav>
       <details class="nav__menu" data-menu>
         <summary>Menu</summary>
         <ul>
           <li><a href="/">Overview</a></li>
-          <li><a href="/toolkit/" aria-current="page">Deal Ops Toolkit</a></li>
-          <li><a href="/inbox/">Deal Ops Inbox</a></li>
-          <li><a href="/#build">How we build</a></li>
+          <li><a href="/toolkit/" aria-current="page">Goten — Deal Calculations</a></li>
+          <li><a href="/inbox/">Trunks — Operations Inbox</a></li>
+          <li><a href="/#build">Why trust it</a></li>
           <li><a href="/#faq">FAQ</a></li>
         </ul>
       </details>
@@ -56,7 +76,7 @@
           </span>
           <span class="hero__line" aria-hidden="true">to the penny.</span>
         </h1>
-        <p class="hero__lede">A free browser tool for SPV deal operations.</p>
+        <p class="hero__lede">A free browser tool for SPV and syndicate deal operations.</p>
         <div class="hero__actions">
           <a class="btn btn--primary" href="https://deal-ops-toolkit.vercel.app">Take the 3-minute tour</a>
           <a class="btn btn--quiet" href="https://deal-ops-toolkit.vercel.app">Open the app <span class="arrow" aria-hidden="true">→</span></a>
@@ -140,19 +160,19 @@
           </figcaption>
         </figure>
       </section>
-      <nav class="nav subnav" aria-label="Deal Ops Toolkit" data-subnav>
+      <nav class="nav subnav" aria-label="Goten" data-subnav>
         <span class="nav__brand glass subnav__brand"
-          ><a href="/" aria-label="Deal Ops home"
+          ><a href="/" aria-label="Vegeta home"
             ><svg class="logo" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-              <path fill="currentColor" fill-rule="evenodd" d="M6 4h9a12 12 0 0 1 0 24H6zM15 11a5 5 0 1 0 0 10a5 5 0 1 0 0-10z" /></svg></a
-          ><a class="subnav__name" href="#top">Toolkit</a></span
+              <path fill="currentColor" d="M4 5h7l5 16 5-16h7L18 28h-4z" /></svg></a
+          ><a class="subnav__name" href="#top">Goten</a></span
         >
         <span class="nav__links glass" data-nav-links>
           <span class="nav__pill" aria-hidden="true" data-nav-pill></span>
           <a href="#how">How it works</a>
           <a href="#trust">Why trust it</a>
-          <a href="#built">How it was built</a>
-          <a href="#faq">Toolkit FAQ</a>
+          <a href="#built">How we check</a>
+          <a href="#faq">Goten FAQ</a>
         </span>
         <span class="nav__end">
           <a class="nav__cta glass" href="https://deal-ops-toolkit.vercel.app">Open the app</a>
@@ -368,30 +388,29 @@
       </section>
 
       <section class="built" id="built" aria-labelledby="built-h">
-        <h2 class="eyebrow section-label" id="built-h">How it was built</h2>
+        <h2 class="eyebrow section-label" id="built-h">How we check</h2>
         <ol class="built__grid">
           <li data-reveal>
             <span class="built__n">01</span>
-            <h3>Requirements first</h3>
-            <p>Code is written only after the requirements are signed off.</p>
+            <h3>Independent calculations</h3>
+            <p>An independent Python implementation checks the calculations against the same rules.</p>
           </li>
           <li data-reveal>
             <span class="built__n">02</span>
-            <h3>One pull request per milestone</h3>
-            <p>Each with automated checks and a review before it is merged.</p>
+            <h3>Checks before results</h3>
+            <p>Calculations check their totals and show no figures if a check fails.</p>
           </li>
           <li data-reveal>
             <span class="built__n">03</span>
-            <h3>Self-test before review</h3>
-            <p>Rule-by-rule checks, hostile inputs, mutation testing and a fresh reviewer.</p>
+            <h3>Tests that challenge the code</h3>
+            <p>Deliberate changes to the calculation code are checked to see whether the tests catch them.</p>
           </li>
           <li data-reveal>
             <span class="built__n">04</span>
-            <h3>Cross-review until clean</h3>
-            <p>43 rounds of Codex review, each until READY or READY AFTER FIXES.</p>
+            <h3>Open to inspection</h3>
+            <p>The code, test results and release notes are available for you to inspect.</p>
           </li>
         </ol>
-        <p class="built__close" data-reveal>The owner defines the problem, the rules and the gates; Claude Code writes the implementation.</p>
         <p class="built__links">
           <a href="https://github.com/deal-ops/deal-ops-toolkit">GitHub <span class="arrow" aria-hidden="true">→</span></a>
           <a href="https://github.com/deal-ops/deal-ops-toolkit/blob/main/docs/en/REVIEW_SUMMARY.md"
@@ -408,7 +427,7 @@
             <details class="faq__item" id="faq-who">
               <summary>Who is it for?</summary>
               <p>
-                Syndicate leads and deal operations teams running an SPV round, and angels who want to see how an exit is split. No data of your own yet?
+                SPV and syndicate operations teams, including fund administrators supporting those teams. No data of your own yet?
                 <a href="https://deal-ops-toolkit.vercel.app">Load the sample deal</a> and take the 3-minute tour.
               </p>
             </details>
@@ -431,7 +450,7 @@
             <details class="faq__item" id="faq-account">
               <summary>Do I need an account?</summary>
               <p>
-                No. It runs in your browser: no sign-up, nothing to install. It is a working prototype, and the code is open source under the
+                No. It runs in your browser: no sign-up, nothing to install. The code is open source under the
                 <a href="https://github.com/deal-ops/deal-ops-toolkit/blob/main/LICENSE">Apache-2.0 licence</a>.
               </p>
             </details>
@@ -560,26 +579,26 @@
         <div>
           <h2 class="footer__h">Modules</h2>
           <ul>
-            <li><a href="/toolkit/">Deal Ops Toolkit</a></li>
-            <li><a href="https://deal-ops-toolkit.vercel.app">Open the Toolkit app</a></li>
-            <li><a href="/inbox/">Deal Ops Inbox</a></li>
-            <li><a href="/inbox/demo/">Inbox demo</a></li>
+            <li><a href="/toolkit/">Goten — Deal Calculations</a></li>
+            <li><a href="https://deal-ops-toolkit.vercel.app">Open Goten</a></li>
+            <li><a href="/inbox/">Trunks — Operations Inbox</a></li>
+            <li><a href="/inbox/demo/">Trunks demo</a></li>
           </ul>
         </div>
         <div>
           <h2 class="footer__h">Code</h2>
           <ul>
-            <li><a href="https://github.com/deal-ops/deal-ops-toolkit">Toolkit on GitHub</a></li>
-            <li><a href="https://github.com/deal-ops/deal-ops-toolkit/blob/main/docs/RELEASE_NOTES.md">Toolkit release notes</a></li>
-            <li><a href="https://github.com/deal-ops/deal-ops-inbox">Inbox on GitHub</a></li>
-            <li><a href="https://github.com/deal-ops/deal-ops-inbox/releases/tag/v0.2.0">Inbox release notes</a></li>
+            <li><a href="https://github.com/deal-ops/deal-ops-toolkit">Goten on GitHub</a></li>
+            <li><a href="https://github.com/deal-ops/deal-ops-toolkit/blob/main/docs/RELEASE_NOTES.md">Goten release notes</a></li>
+            <li><a href="https://github.com/deal-ops/deal-ops-inbox">Trunks on GitHub</a></li>
+            <li><a href="https://github.com/deal-ops/deal-ops-inbox/releases/tag/v0.2.0">Trunks release notes</a></li>
           </ul>
         </div>
         <div>
           <h2 class="footer__h">Project</h2>
           <ul>
-            <li><a href="/#build">How we build</a></li>
-            <li><a href="https://github.com/deal-ops/deal-ops-toolkit/blob/main/docs/en/REVIEW_SUMMARY.md">Toolkit review summary</a></li>
+            <li><a href="/#build">Why trust it</a></li>
+            <li><a href="https://github.com/deal-ops/deal-ops-toolkit/blob/main/docs/en/REVIEW_SUMMARY.md">Goten review summary</a></li>
             <li><a href="https://github.com/deal-ops/deal-ops-inbox/blob/main/LICENSE">Licence: Apache-2.0</a></li>
           </ul>
         </div>
@@ -593,8 +612,8 @@
       <p class="footer__legal">
         This is not investment, tax or legal advice. Check every result yourself before you rely on it. Not affiliated with any platform.
       </p>
-      <p class="footer__note">Deal Ops is open-source software, not a regulated service. It does not hold money, give advice or act for you.</p>
-      <p class="footer__mark" aria-hidden="true">Deal Ops</p>
+      <p class="footer__note">Vegeta is open-source software, not a regulated service. It does not hold money, give advice or act for you.</p>
+      <p class="footer__mark" aria-hidden="true">Vegeta</p>
     </footer>
   </body>
 </html>

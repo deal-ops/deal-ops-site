@@ -4,12 +4,32 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
-    <title>Deal Ops Inbox: a read-only email agent for deal operations</title>
+    <title>Trunks — Operations Inbox | Vegeta</title>
     <meta
       name="description"
-      content="An open-source email agent you host yourself. It sorts each email in your deal-operations inbox, links it to your deals and investors, flags risk and prepares a reply from a fixed template. A person reviews and sends. It never sends email."
+      content="Trunks by Vegeta: classify investor emails, connect imported deal records, flag risks and prepare template replies for human review. Self-hosted, open-source operations software."
     />
-    <link rel="icon" href="/favicon-d.svg" type="image/svg+xml" />
+    <meta property="og:site_name" content="Vegeta" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Trunks — Operations Inbox | Vegeta" />
+    <meta
+      property="og:description"
+      content="Trunks by Vegeta: classify investor emails, connect imported deal records, flag risks and prepare template replies for human review. Self-hosted, open-source operations software."
+    />
+    <meta property="og:url" content="https://deal-ops-toolkit-site.vercel.app/inbox/" />
+    <meta property="og:image" content="https://deal-ops-toolkit-site.vercel.app/img/vegeta-share.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Vegeta — SPV and syndicate operations software. Goten: Deal Calculations. Trunks: Operations Inbox." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Trunks — Operations Inbox | Vegeta" />
+    <meta
+      name="twitter:description"
+      content="Trunks by Vegeta: classify investor emails, connect imported deal records, flag risks and prepare template replies for human review. Self-hosted, open-source operations software."
+    />
+    <meta name="twitter:image" content="https://deal-ops-toolkit-site.vercel.app/img/vegeta-share.png" />
+    <meta name="twitter:image:alt" content="Vegeta — SPV and syndicate operations software. Goten: Deal Calculations. Trunks: Operations Inbox." />
+    <link rel="icon" href="/favicon-v.svg" type="image/svg+xml" />
     <link rel="preload" href="/fonts/inter-latin-wght.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/plex-mono-latin-500.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css" />
@@ -21,23 +41,23 @@
     <header class="nav" data-nav>
       <a class="nav__brand glass" href="/"
         ><svg class="logo" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-          <path fill="currentColor" fill-rule="evenodd" d="M6 4h9a12 12 0 0 1 0 24H6zM15 11a5 5 0 1 0 0 10a5 5 0 1 0 0-10z" /></svg
-        >Deal Ops</a
+          <path fill="currentColor" d="M4 5h7l5 16 5-16h7L18 28h-4z" /></svg
+        >Vegeta</a
       >
-      <nav class="nav__links glass" aria-label="Deal Ops" data-nav-links>
+      <nav class="nav__links glass" aria-label="Vegeta" data-nav-links>
         <span class="nav__pill" aria-hidden="true" data-nav-pill></span>
-        <a href="/toolkit/">Toolkit</a>
-        <a href="/inbox/" aria-current="page">Inbox</a>
-        <a href="/#build">How we build</a>
+        <a href="/toolkit/">Goten</a>
+        <a href="/inbox/" aria-current="page">Trunks</a>
+        <a href="/#build">Why trust it</a>
         <a href="/#faq">FAQ</a>
       </nav>
       <details class="nav__menu" data-menu>
         <summary>Menu</summary>
         <ul>
           <li><a href="/">Overview</a></li>
-          <li><a href="/toolkit/">Deal Ops Toolkit</a></li>
-          <li><a href="/inbox/" aria-current="page">Deal Ops Inbox</a></li>
-          <li><a href="/#build">How we build</a></li>
+          <li><a href="/toolkit/">Goten — Deal Calculations</a></li>
+          <li><a href="/inbox/" aria-current="page">Trunks — Operations Inbox</a></li>
+          <li><a href="/#build">Why trust it</a></li>
           <li><a href="/#faq">FAQ</a></li>
         </ul>
       </details>
@@ -60,11 +80,12 @@
           </span>
           <span class="hero__line" aria-hidden="true">ready for review.</span>
         </h1>
-        <p class="hero__lede">A self-hosted email agent. A person decides and sends.</p>
+        <p class="hero__lede">An operations inbox for SPV and syndicate teams.</p>
         <div class="hero__actions">
           <a class="btn btn--primary" href="/inbox/demo/">See the demo</a>
           <a class="btn btn--quiet" href="https://github.com/deal-ops/deal-ops-inbox">View the code <span class="arrow" aria-hidden="true">→</span></a>
         </div>
+
         <!-- Hero illustration: one email from the demo (sample E0225) as a three-step flow, set in type; the reasons are the
              review screen's own wording (plan 14 R4); not screenshots -->
         <figure class="scene scene--flow" data-scene>
@@ -108,12 +129,12 @@
           </figcaption>
         </figure>
       </section>
-      <nav class="nav subnav" aria-label="Deal Ops Inbox" data-subnav>
+      <nav class="nav subnav" aria-label="Trunks" data-subnav>
         <span class="nav__brand glass subnav__brand"
-          ><a href="/" aria-label="Deal Ops home"
+          ><a href="/" aria-label="Vegeta home"
             ><svg class="logo" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-              <path fill="currentColor" fill-rule="evenodd" d="M6 4h9a12 12 0 0 1 0 24H6zM15 11a5 5 0 1 0 0 10a5 5 0 1 0 0-10z" /></svg></a
-          ><a class="subnav__name" href="#top">Inbox</a></span
+              <path fill="currentColor" d="M4 5h7l5 16 5-16h7L18 28h-4z" /></svg></a
+          ><a class="subnav__name" href="#top">Trunks</a></span
         >
         <span class="nav__links glass" data-nav-links>
           <span class="nav__pill" aria-hidden="true" data-nav-pill></span>
@@ -121,7 +142,7 @@
           <a href="#how">How it works</a>
           <a href="#cases">Use cases</a>
           <a href="#security">Security</a>
-          <a href="#faq">Inbox FAQ</a>
+          <a href="#faq">Trunks FAQ</a>
         </span>
         <span class="nav__end">
           <a class="nav__cta glass" href="/inbox/demo/">See the demo</a>
@@ -217,10 +238,10 @@
                 <article class="card" id="step-2" data-card data-tone="dark">
                   <div class="card__text">
                     <p class="eyebrow">Step 2 · Understand</p>
-                    <h3 class="card__title">Code reads the numbers. The model only sorts.</h3>
+                    <h3 class="card__title">Code reads amounts. Models classify and extract.</h3>
                     <p class="card__body">
-                      Amounts, references, UETRs and account numbers are read by code, including MT103 and pacs.008 files. The model only picks categories and
-                      extracts fields, from redacted text and with no tools.
+                      Code reads amounts, references, UETRs and account numbers, including MT103 and pacs.008 files. The model classifies requests and extracts
+                      fields from redacted text, with no tools.
                     </p>
                   </div>
                   <div class="media media--peach">
@@ -283,7 +304,7 @@
                           class="illus illus--check"
                           data-illus="check"
                           role="img"
-                          aria-label="Sophie Laurent is an authenticated sender, linked to commitment NW-006 and Northwind Robotics. The Toolkit ledger says not received in full. The rules compute medium risk."
+                          aria-label="Sophie Laurent is an authenticated sender, linked to commitment NW-006 and Northwind Robotics. Goten ledger says not received in full. The rules compute medium risk."
                         >
                           <div aria-hidden="true">
                             <div class="illus__head"><span class="illus__title">Linked and checked</span><span class="illus__count">E0024</span></div>
@@ -449,8 +470,8 @@
             <span class="built__n">05</span>
             <h3>A withdrawal before closing</h3>
             <p>
-              Checks for the investor&rsquo;s consent (here, the investor is copied in) and suggests marking them withdrawn in the Toolkit; without it, it asks
-              for written consent first. A person makes the change.
+              Checks for the investor&rsquo;s consent (here, the investor is copied in) and suggests marking them withdrawn in Goten; without it, it asks for
+              written consent first. A person makes the change.
             </p>
             <a class="case__link" href="/inbox/demo/#case=E0053">Open in the demo <span class="arrow" aria-hidden="true">→</span></a>
           </li>
@@ -641,10 +662,7 @@
           <li data-reveal>
             <span class="built__n">03</span>
             <h3>Your records</h3>
-            <p>
-              Deals, commitments, bank lines and the reconciliation ledger from Deal Ops Toolkit CSV files, plus a contacts file. Out: CSV lists and signed
-              events.
-            </p>
+            <p>Deals, commitments, bank lines and the reconciliation ledger from Goten CSV files, plus a contacts file. Out: CSV lists and signed events.</p>
           </li>
           <li data-reveal>
             <span class="built__n">04</span>
@@ -679,7 +697,7 @@
               <summary>What does it not do?</summary>
               <p>
                 It does not send email, write drafts or change anything in your mailbox. It does not move money, connect to a bank or change business records,
-                including the Toolkit&rsquo;s. It does not verify KYC. It does not read images or scans: there is no OCR.
+                including Goten&rsquo;s. It does not verify KYC. It does not read images or scans: there is no OCR.
               </p>
             </details>
             <details class="faq__item" id="ifaq-cost">
@@ -727,8 +745,8 @@
             <details class="faq__item" id="ifaq-roles">
               <summary>Who can do what?</summary>
               <p>
-                Three roles: reviewer, approver and admin. Sign in with local accounts or with your own identity provider (OIDC). In this version users and
-                directory imports have no screens: an admin uses the HTTP API, as described in
+                Three roles: reviewer, approver and admin. Sign in with local accounts or with your own identity provider (OIDC). Admins manage users and import
+                directories through the API, as described in
                 <a href="https://github.com/deal-ops/deal-ops-inbox/blob/main/docs/en/users-and-directory.md">Users and directory</a>.
               </p>
             </details>
@@ -823,26 +841,26 @@
         <div>
           <h2 class="footer__h">Modules</h2>
           <ul>
-            <li><a href="/toolkit/">Deal Ops Toolkit</a></li>
-            <li><a href="https://deal-ops-toolkit.vercel.app">Open the Toolkit app</a></li>
-            <li><a href="/inbox/">Deal Ops Inbox</a></li>
-            <li><a href="/inbox/demo/">Inbox demo</a></li>
+            <li><a href="/toolkit/">Goten — Deal Calculations</a></li>
+            <li><a href="https://deal-ops-toolkit.vercel.app">Open Goten</a></li>
+            <li><a href="/inbox/">Trunks — Operations Inbox</a></li>
+            <li><a href="/inbox/demo/">Trunks demo</a></li>
           </ul>
         </div>
         <div>
           <h2 class="footer__h">Code</h2>
           <ul>
-            <li><a href="https://github.com/deal-ops/deal-ops-toolkit">Toolkit on GitHub</a></li>
-            <li><a href="https://github.com/deal-ops/deal-ops-toolkit/blob/main/docs/RELEASE_NOTES.md">Toolkit release notes</a></li>
-            <li><a href="https://github.com/deal-ops/deal-ops-inbox">Inbox on GitHub</a></li>
-            <li><a href="https://github.com/deal-ops/deal-ops-inbox/releases/tag/v0.2.0">Inbox release notes</a></li>
+            <li><a href="https://github.com/deal-ops/deal-ops-toolkit">Goten on GitHub</a></li>
+            <li><a href="https://github.com/deal-ops/deal-ops-toolkit/blob/main/docs/RELEASE_NOTES.md">Goten release notes</a></li>
+            <li><a href="https://github.com/deal-ops/deal-ops-inbox">Trunks on GitHub</a></li>
+            <li><a href="https://github.com/deal-ops/deal-ops-inbox/releases/tag/v0.2.0">Trunks release notes</a></li>
           </ul>
         </div>
         <div>
           <h2 class="footer__h">Project</h2>
           <ul>
-            <li><a href="/#build">How we build</a></li>
-            <li><a href="https://github.com/deal-ops/deal-ops-toolkit/blob/main/docs/en/REVIEW_SUMMARY.md">Toolkit review summary</a></li>
+            <li><a href="/#build">Why trust it</a></li>
+            <li><a href="https://github.com/deal-ops/deal-ops-toolkit/blob/main/docs/en/REVIEW_SUMMARY.md">Goten review summary</a></li>
             <li><a href="https://github.com/deal-ops/deal-ops-inbox/blob/main/LICENSE">Licence: Apache-2.0</a></li>
           </ul>
         </div>
@@ -856,8 +874,8 @@
       <p class="footer__legal">
         This is not investment, tax or legal advice. Check every result yourself before you rely on it. Not affiliated with any platform.
       </p>
-      <p class="footer__note">Deal Ops is open-source software, not a regulated service. It does not hold money, give advice or act for you.</p>
-      <p class="footer__mark" aria-hidden="true">Deal Ops</p>
+      <p class="footer__note">Vegeta is open-source software, not a regulated service. It does not hold money, give advice or act for you.</p>
+      <p class="footer__mark" aria-hidden="true">Vegeta</p>
     </footer>
   </body>
 </html>
