@@ -1,6 +1,6 @@
 # Vegeta website
 
-The website of Vegeta, open-source software for SPV and syndicate operations: https://deal-ops-toolkit-site.vercel.app
+The website of Vegeta, open-source software for SPV and syndicate operations: https://vegeta-ops.vercel.app
 
 Goten — Deal Calculations and Trunks — Operations Inbox are the two modules.
 
