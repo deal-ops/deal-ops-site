@@ -130,7 +130,7 @@ try {
 
 // ---- K1, K2: every page ----
 const EXTERNAL =
-  /^https:\/\/(vegeta-ops\.vercel\.app(\/|$)|deal-ops-toolkit\.vercel\.app(\/|$)|github\.com\/deal-ops\/deal-ops-(toolkit|inbox)(\/|$)|github\.com\/deal-ops$)|^mailto:haixiangyuann@gmail\.com$/
+  /^https:\/\/(vegeta-ops\.vercel\.app(\/|$)|deal-ops-toolkit\.vercel\.app(\/|$)|github\.com\/vegeta-labs\/(goten|trunks)(\/|$)|github\.com\/vegeta-labs$)|^mailto:haixiangyuann@gmail\.com$/
 const footers = new Set()
 for (const [url, h] of Object.entries(html)) {
   const at = (m) => `${url}: ${m}`

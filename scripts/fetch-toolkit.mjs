@@ -6,7 +6,7 @@
 import { execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, readFileSync } from 'node:fs'
 
-const REPO = 'https://github.com/deal-ops/deal-ops-toolkit'
+const REPO = 'https://github.com/vegeta-labs/goten'
 const DIR = 'vendor/toolkit'
 const ref = process.env.TOOLKIT_REF ?? readFileSync('toolkit.ref', 'utf8').trim()
 if (!process.env.TOOLKIT_REF && !/^[0-9a-f]{40}$/.test(ref)) {

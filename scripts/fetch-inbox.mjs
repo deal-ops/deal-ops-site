@@ -6,7 +6,7 @@
 import { execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, readFileSync } from 'node:fs'
 
-const REPO = 'https://github.com/deal-ops/deal-ops-inbox'
+const REPO = 'https://github.com/vegeta-labs/trunks'
 const DIR = 'vendor/inbox'
 const ref = process.env.INBOX_REF ?? readFileSync('inbox.ref', 'utf8').trim()
 if (!process.env.INBOX_REF && !/^[0-9a-f]{40}$/.test(ref)) {
