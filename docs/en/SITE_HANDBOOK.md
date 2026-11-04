@@ -252,3 +252,7 @@ Type only, no cards: large figures under hairlines; centred privacy statement; f
 
 ## 12. Not done yet
 - Nothing. The owner checked the site on an iPhone; the two problems he found (the nav covering text, oversized phone gaps) are fixed.
+
+## Trunks v0.2.1 release integration · 2026-11-04
+
+The official Inbox source pin, demo package and current release links move to v0.2.1. Existing routes, Vegeta presentation and interactions remain unchanged. The published evaluation figures were measured on v0.2.0 and carried forward; both overview and Inbox trust copy identify that measurement version. The source guard enforces exact metric-table equality and attribution. The demo is installed only through its authenticated release archive and integrity lock. Publication follows the product release and green private/public CI.

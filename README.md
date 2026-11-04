@@ -4,7 +4,7 @@ The website of Vegeta, open-source software for SPV and syndicate operations: ht
 
 Goten — Deal Calculations and Trunks — Operations Inbox are the two modules.
 
-Static pages (`site/`: the overview `/`, `/toolkit/` and `/inbox/`) with one small script (`site-src/site.js`, built to `site/site.js`). `/inbox/demo/` is the Deal Ops Inbox demo package from its GitHub Release, unpacked as published and locked by hash in `inbox-demo.lock` (`scripts/inbox-demo.mjs`). No analytics, no external requests; the security headers are in `site/vercel.json`. Design, components and checks are described in `docs/en/SITE_HANDBOOK.md`.
+Static pages (`site/`: the overview `/`, `/toolkit/` and `/inbox/`) with one small script (`site-src/site.js`, built to `site/site.js`). `/inbox/demo/` is the Trunks — Operations Inbox demo package from its GitHub Release, unpacked as published and locked by hash in `inbox-demo.lock` (`scripts/inbox-demo.mjs`). No analytics, no external requests; the security headers are in `site/vercel.json`. Design, components and checks are described in `docs/en/SITE_HANDBOOK.md`.
 
 ```bash
 npm ci

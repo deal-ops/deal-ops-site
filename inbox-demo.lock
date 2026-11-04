@@ -1,20 +1,20 @@
 {
-  "package": "deal-ops-inbox-demo-v0.2.0.tar.gz",
-  "sha256": "afce26343687c6f811e08b830bbd6b5a9e0b48c1124bced840972283ee2ac842",
-  "version": "0.2.0",
-  "commit": "628e19b86e827d2dc37eb3c82371a7f6c0067945",
-  "built_at": "2026-11-04T00:43:58.538Z",
-  "manifest_sha256": "a29c44233e7b5becdce31287fb2c4c05d1952eccbde71347382bfa11f3b95403",
+  "package": "deal-ops-inbox-demo-v0.2.1.tar.gz",
+  "sha256": "889fdc3fcfca3ccf9771c6243f876d89e86a875aea819dd79dde2bdcbab49846",
+  "version": "0.2.1",
+  "commit": "0ea5508adf865d2f37e7c79c92c4e455195bdf83",
+  "built_at": "2026-11-04T16:42:52.169Z",
+  "manifest_sha256": "257ae93140870d416464bf12d46c1f1f2f2b3fd7866526d9931e99a6bb939abf",
   "files": {
     "assets/index-CJgYbjT7.css": "2a6e62cb899d1adb0a3b342fc2efbf472fd73e1684f3812e056022e5a78c3762",
-    "assets/index-DhvEF-7y.js": "b37696fc5c71fe8303725c2f366665f09be4e062f8f9d54ef8febeaf16082a35",
+    "assets/index-trtHxyfD.js": "c39f427451a07ccdf0da18b825fee70abb4f2e4215382813c0ffda466532b1a8",
     "assets/inter-latin-wght-Dx4kXJAl.woff2": "3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62",
     "assets/plex-mono-latin-400-DMJ8VG8y.woff2": "08949f728dc52d528e69b1667d15c89a5686a4ee9a296ff90983985f99c380f7",
     "assets/plex-mono-latin-500-DSY6xOcd.woff2": "01d285447409c8a588692162439a038b8cbd7871309ee20267b0d2d91c6e8e22",
-    "data/snapshot.js": "c2dfcf7dc7dc414b70b258d6f0ccc7d83ded80af12348e155cd58c79e30b0cac",
-    "index.html": "c213e79fb40b83168bdc865126698bee2cbb00af363e81aa1c57943ee0881ba5",
+    "data/snapshot.js": "847d3044640bc01f63f90a9a2b435c60b9e63cee39a676d99ac536be420cf389",
+    "index.html": "1da4a353840143a8e35a887dccd3360aaa65082734e4fdf963f4fc3cded52a8e",
     "licenses/ibm-plex-mono-OFL.txt": "23b0a9d0c6d3f140a0b77e483c5cfa6bba574325ef5cb189ed9f2fec4884533f",
     "licenses/inter-OFL.txt": "3b0a5fca3d17942cde889069889dedbbbd075e9b599968c82a95f4d944e9b345",
-    "snapshot-info.json": "c896b9d14f0b4ebca513e1f3444f5081bb6aacf9e86c74c37f0264529f8ab83d"
+    "snapshot-info.json": "cf38c04fd6a3867f88abfa794977ccd511fa28a5267d587c0d84e9b04ed7838a"
   }
 }
