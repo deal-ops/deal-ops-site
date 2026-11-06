@@ -204,6 +204,7 @@ Type only, no cards: large figures under hairlines; centred privacy statement; f
 
 | Date | Decision | Why |
 |---|---|---|
+| 11-06 | The overview hero line becomes "Built for SPV and syndicate operations teams."; titles, the share card, footer, FAQ and repository descriptions still say software | It reads as a product, and places without context still state what it is |
 | 11-06 | The closing call to action and the share card use a painted valley; not in the hero or dense sections; the glow drift is removed | Text stays first; product panels would hide it in the hero; the artwork is outside the Apache-2.0 code licence |
 | 11-04 | Integrate the official Inbox v0.2.0 source and demo; trust figures use fresh held-out results:79/79,25/25,15/15 and macroF1 0.965; explain the narrow inline-image exception and residual tradeoff | The owner requested publication; figures come only from the current release notes, preserving R19 headline loops, existing illustrations/layout and mailbox/production-volume test limits |
 | 2026-11-03 | R19: headline phrases loop every2s while visible; offscreen, hidden tabs and reduced motion stop rotation; returning resumes the current phrase. Replaces the one-round stop rule | Owner reported a static title after returning from /#build and /#faq, and explicitly requested continuous rotation. Existing copy, card scrolling and independent illustrations stay unchanged |
