@@ -25,7 +25,31 @@ document.addEventListener('DOMContentLoaded', () => {
   faqOpen()
   menuClose()
   subnavShow()
+  ambientVideo()
 })
+
+/** The closing section's water and trees: plays only while on screen and not under reduced motion; the still underneath is the same picture. */
+function ambientVideo() {
+  const video = document.querySelector('[data-ambient]')
+  if (!video || !('IntersectionObserver' in window)) return
+  let seen = false
+  const update = () => {
+    if (seen && moving() && !document.hidden) {
+      const started = video.play()
+      if (started) started.catch(() => {})
+    } else video.pause()
+  }
+  video.addEventListener('playing', () => video.classList.add('is-on'))
+  new IntersectionObserver(([e]) => {
+    seen = e.isIntersecting
+    update()
+  }).observe(video)
+  document.addEventListener('visibilitychange', update)
+  onMotionChange(() => {
+    if (!moving()) video.classList.remove('is-on')
+    update()
+  })
+}
 
 /** Module pages (plan 14 R10): once the global nav has scrolled away with the page, the page's own nav comes down from the
     top, so only one bar shows at a time. Without the script it stays under the hero. */

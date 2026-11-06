@@ -83,7 +83,11 @@ const inboxMeasuredVersion = /were \*\*measured on v([0-9.]+)\*\*/.exec(currentI
 const measuredInboxNotes = releaseSection(inboxNotesRaw, inboxMeasuredVersion)
 if (!measuredInboxNotes) fail(`Inbox measurement release v${inboxMeasuredVersion} is missing`)
 if (inboxMeasuredVersion !== inboxVersion) {
-  const table = (s) => s.split('\n').filter((line) => /^\s*\|/.test(line)).join('\n')
+  const table = (s) =>
+    s
+      .split('\n')
+      .filter((line) => /^\s*\|/.test(line))
+      .join('\n')
   if (table(currentInboxNotes) !== table(measuredInboxNotes)) fail('Inbox carried-forward metric table differs from its measured release')
 }
 const metricCell = (label) => {
@@ -309,9 +313,15 @@ function faqOf(url, prefix, numbers, count, oneParagraph = true) {
   if (dts.length !== figures.length || dts.some((d, i) => d !== figures[i])) fail(`/inbox/: trust figures differ from the measured v${inboxVersion} release`)
   const note = plain(/<p class="trust__note">([\s\S]*?)<\/p>/.exec(/<section class="trust"[\s\S]*?<\/section>/.exec(page)?.[0] ?? '')?.[1] ?? '')
   if (!note.includes(`v${inboxVersion} release checks`)) fail('/inbox/: trust note does not name the current release')
-  if (inboxMeasuredVersion !== inboxVersion && !note.includes(`Measured on v${inboxMeasuredVersion}`)) fail('/inbox/: trust note does not identify the measured release')
+  if (inboxMeasuredVersion !== inboxVersion && !note.includes(`Measured on v${inboxMeasuredVersion}`))
+    fail('/inbox/: trust note does not identify the measured release')
   for (const [n] of note.matchAll(/\d[\d,.]*\d|\d/g)) {
-    const proof = n === inboxMeasuredVersion && inboxMeasuredVersion !== inboxVersion ? /measured on/ : n === inboxVersion ? new RegExp(`^## v${esc(inboxVersion)}\\b`, 'm') : { 121: /held-out set of 121 emails/, 5.5: /Claude Opus 5\.5/ }[n]
+    const proof =
+      n === inboxMeasuredVersion && inboxMeasuredVersion !== inboxVersion
+        ? /measured on/
+        : n === inboxVersion
+          ? new RegExp(`^## v${esc(inboxVersion)}\\b`, 'm')
+          : { 121: /held-out set of 121 emails/, 5.5: /Claude Opus 5\.5/ }[n]
     if (!proof?.test(currentInboxNotes)) fail(`/inbox/ trust note: ${n} is not backed by the current Inbox release`)
   }
   // N15: the problem section quotes figures from an external report; they were checked against the report itself
@@ -421,7 +431,14 @@ function faqOf(url, prefix, numbers, count, oneParagraph = true) {
   const shownText = JSON.stringify(snapshot ?? {})
   const toolkitScene = /<figure class="scene"[\s\S]*?<\/figure>/.exec(html['/toolkit/'])?.[0] ?? ''
   const numbering = ['01', '02', '03', '04', '05', '06', '1', '2', '3', '4']
-  const names = { 365: 'Microsoft 365', 103: 'MT103', '008': 'pacs.008', '2.0': 'Apache-2.0', [inboxVersion]: 'the current release', [inboxMeasuredVersion]: 'the measured release' }
+  const names = {
+    365: 'Microsoft 365',
+    103: 'MT103',
+    '008': 'pacs.008',
+    '2.0': 'Apache-2.0',
+    [inboxVersion]: 'the current release',
+    [inboxMeasuredVersion]: 'the measured release',
+  }
   // Each trust value is already parsed and validated against its current release metric above.
   const releaseFigureNumbers = new Set(Object.values(inboxTrust).flatMap((value) => value.split(' / ')))
   const INBOX_FIGURES = { 121: /held-out set of 121 emails/, 5.5: /Claude Opus 5\.5/ }
@@ -453,7 +470,8 @@ function faqOf(url, prefix, numbers, count, oneParagraph = true) {
     if (!want || shown !== want.figure) fail(`/: the ${mod} column shows ${shown}, not its backed figure ${want?.figure}`)
     else if (!want.backed()) fail(`/: the ${mod} figure ${shown} is not in its release notes' v${want.release} section`)
     if (want && !plain(body).includes(`v${want.release} release checks`)) fail(`/: the ${mod} column does not name release v${want?.release}`)
-    if (mod === 'inbox' && inboxMeasuredVersion !== inboxVersion && !plain(body).includes(`measured on v${inboxMeasuredVersion}`)) fail('/: Inbox module does not identify the measured release')
+    if (mod === 'inbox' && inboxMeasuredVersion !== inboxVersion && !plain(body).includes(`measured on v${inboxMeasuredVersion}`))
+      fail('/: Inbox module does not identify the measured release')
   }
   const withoutModules = modules.reduce((h, m) => h.replace(m[0], ''), html['/'])
   for (const [n] of figures(withoutModules)) {
@@ -521,7 +539,7 @@ const gz = gzipSync(readFileSync(join(SITE, 'site.js'))).length
 if (gz > 6144) fail(`site/site.js is ${gz} bytes gzip, over 6 KB`)
 
 // R14: step cards are set in type; obsolete video assets must not return.
-const clips = walk(SITE).filter((f) => f.endsWith('.mp4'))
+const clips = walk(SITE).filter((f) => f.endsWith('.mp4') && relative(SITE, f) !== join('img', 'valley-loop.mp4')) // the closing section's loop
 if (clips.length) fail('obsolete step clips remain: ' + clips.map((f) => relative(SITE, f)).join(', '))
 
 // headers (K9: one rule for the whole site, unchanged)

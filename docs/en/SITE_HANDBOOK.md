@@ -1,5 +1,9 @@
 # Project website handbook
 
+## Painted valley in the closing section and share card, v1.16 (2026-11-06)
+
+The closing call to action on all three pages and the share card use `site/img/valley.webp`; this overrides older mentions of the closing glow and its drift. Text stays on the page colour and the painting rises below it into the dark footer, with no added copy. The height follows the text and picture (bottom padding 29.8vw + 40px, so text clears the roof) and is about nine tenths of a common desktop screen; short laptops and small phones can exceed one screen. The painted area carries the print grid (`print-grain.svg`), kept off the text for contrast. The water and tree crowns loop (`valley-loop.mp4`); trunks, buildings and hills do not move. It loads when reached and pauses off screen; reduced motion and no-script show the still. Browsers decode video colour slightly differently (about 10/255 in Playwright WebKit), so the whole painting hands over to the video with a slow 1.2 s fade rather than a partial overlay. It is not used in the hero or in dense text and number sections, and no images with characters are used. The artwork is not licensed under Apache-2.0. After changing this section, re-test its text contrast in light and dark.
+
 ## Vercel brand address (2026-11-04)
 
 The website address is https://vegeta-ops.vercel.app/ on the existing project and production branch. Paths, application address and official demo package stay unchanged. Canonical and social metadata use this address; historical deployment records retain their original URLs.
@@ -48,7 +52,7 @@ English handbook for the project website, v1.14 · 2026-11-04 (Inbox v0.2.0 demo
 | 8 | Privacy | Light, centred type | "Your deal data stays in your browser" and the app's privacy sentence (R-X-02) word for word | Fade in |
 | 9 | How it was built | Light, four columns under hairlines | 01–04, the closing line on who does what, links to the repository and the review summary | Fade in |
 | 10 | FAQ | Light, hairlines, group name left, questions right | 16 questions in 4 groups, native disclosure, closed by default (§4.5) | No entrance (§10 item 12) |
-| 11 | Closing call to action | Full-width glow, echoing the hero | "Try it with the sample deal" / "No sign-up, nothing to install." / tour button | The glow drifts once (24 s) |
+| 11 | Closing call to action | Full-width painted valley (`img/valley.webp`) rising below the text into the footer, with a print grid | "Try it with the sample deal" / "No sign-up, nothing to install." / tour button | The water and tree crowns loop while visible; trunks and buildings do not move |
 | 12 | Footer | Dark | Product / Code / Contact; the app's disclaimer (R-X-03); last, a near full-width wordmark fading downwards and cut off by the bottom edge (decorative, hidden from screen readers) | No entrance (§10 item 11) |
 
 **Layout rules**
@@ -120,7 +124,7 @@ Fixed capsules. The hover pill's position is computed by `site.js` and passed as
 - No feathering or cropped text. Each image has a stable accessible description and hides its animated text from screen readers. No captions below it. On phones the allocation table puts each name above the three amount columns.
 
 ### 4.4 Other sections
-Type only, no cards: large figures under hairlines; centred privacy statement; four columns under hairlines; a full-width glow for the call to action. Content fades in once (blur 12px and 28px down to sharp in 0.9 s).
+Type only, no cards: large figures under hairlines; centred privacy statement; four columns under hairlines; a full-width painted valley for the call to action. Content fades in once (blur 12px and 28px down to sharp in 0.9 s).
 
 ### 4.5 FAQ
 - **Why:** so a visitor can tell quickly whether the tool fits their deal. No articles for now.
@@ -167,13 +171,13 @@ Type only, no cards: large figures under hairlines; centred privacy statement; f
 | `site/vercel.json` | Security headers: `script-src 'self'`, `media-src 'self'`, otherwise as the app; one rule for the whole site (the demo too, `connect-src 'none'` unchanged); three redirects `/toolkit`, `/inbox`, `/inbox/demo` → with the slash (the demo uses relative paths) |
 | `inbox.ref`, `scripts/fetch-inbox.mjs` (`npm run inbox:fetch`) | The public Inbox commit whose release notes, UI text and default categories the checks read, checked out to `vendor/inbox` |
 | `site/inbox/demo/`, `inbox-demo.lock`, `scripts/inbox-demo.mjs` | The Inbox demo package: `node scripts/inbox-demo.mjs <tar.gz> <.sha256>` checks the Release asset's hash, its manifest and its commit, unpacks the whole package and writes the lock; no file in it is edited by hand |
-| `site/fonts/`, `site/img/grain.svg` | Fonts and grain texture |
+| `site/fonts/`, `site/img/grain.svg`, `site/img/valley.webp`, `site/img/valley-loop.mp4`, `site/img/print-grain.svg` | Fonts, grain texture, and the closing section's painted valley, water and tree loop, and print grid; the old `vegeta-share.png` stays for old links |
 | `scripts/check-site.mjs` (`npm run site:check`, also in CI) | One external script and no inline script, style attribute or handler; local files and anchors exist; external links only to the app and the public repository; the privacy and disclaimer sentences match the app word for word; the trust figures are backed by the release notes; `site/site.js` is the current build and ≤ 6 KB gzip; seven illustrations match their sample sources; no obsolete clips; the CSP is complete |
 | `scripts/site-preview.mjs` | Serves `site/` with the headers and redirects from `vercel.json`: `node scripts/site-preview.mjs 4181` |
 | `scripts/site-shots.mjs` (`node scripts/site-shots.mjs <dir> [base]`, default `http://localhost:4181`) | Screenshots of the four pages at desktop light and dark, 1261 × 657, 375px and reduced motion; page width at 320/375/390/768px; the nav at every width from 761 to 1200px; console and CSP errors |
 
-- The script only adds classes, sets custom properties through the CSSOM, controls visible headline loops and starts and stops the visible step illustrations, opens an FAQ question a link points at, closes the phone menu after a link, and on `/` moves old Toolkit links on to `/toolkit/`; every page is complete without it. Limit: ≤ 6 KB as served (gzip); about 2 KB now.
-- Step illustrations request no image or video assets; the page loads HTML/CSS/JS, local fonts and texture.
+- The script only adds classes, sets custom properties through the CSSOM, controls visible headline loops and starts and stops the visible step illustrations, plays and pauses the closing loop, opens an FAQ question a link points at, closes the phone menu after a link, and on `/` moves old Toolkit links on to `/toolkit/`; every page is complete without it. Limit: ≤ 6 KB as served (gzip); about 2 KB now.
+- Step illustrations request no image or video assets; the page loads HTML/CSS/JS, local fonts, texture and the closing valley (about 120 KB); the water and tree loop (about 600 KB) loads only on reaching the closing section.
 - **No sideways scroll on phones:** `overflow-x: clip` on both `html` and `body`. The glows are 100vw wide; on `body` alone the setting passes to the viewport and phone browsers widen the layout to 1.5 ×.
 
 - Illustration validation: `scripts/check-illustrations.mjs` binds full text/descriptions/proportions to pinned sources; `scripts/illustrations-shots.mjs` and `scripts/deck-ui-walkthrough.mjs` verify layout, native scroll parity and independent playback. `scripts/hero-ui-walkthrough.mjs` checks multiple title loops, bottom-anchor returns, phone fit and visibility/motion lifecycle.
@@ -200,6 +204,7 @@ Type only, no cards: large figures under hairlines; centred privacy statement; f
 
 | Date | Decision | Why |
 |---|---|---|
+| 11-06 | The closing call to action and the share card use a painted valley; not in the hero or dense sections; the glow drift is removed | Text stays first; product panels would hide it in the hero; the artwork is outside the Apache-2.0 code licence |
 | 11-04 | Integrate the official Inbox v0.2.0 source and demo; trust figures use fresh held-out results:79/79,25/25,15/15 and macroF1 0.965; explain the narrow inline-image exception and residual tradeoff | The owner requested publication; figures come only from the current release notes, preserving R19 headline loops, existing illustrations/layout and mailbox/production-volume test limits |
 | 2026-11-03 | R19: headline phrases loop every2s while visible; offscreen, hidden tabs and reduced motion stop rotation; returning resumes the current phrase. Replaces the one-round stop rule | Owner reported a static title after returning from /#build and /#faq, and explicitly requested continuous rotation. Existing copy, card scrolling and independent illustrations stay unchanged |
 | 2026-11-03 | Use `favicon-d.svg` on all three marketing pages, retaining the D artwork; refresh the organisation profile with the logo, site links and the current Inbox demo | Owner reported the old tab icon in a screenshot. A new path avoids reuse of the old favicon cache without changing interactions or the official demo package |
