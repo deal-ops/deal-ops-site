@@ -2,8 +2,9 @@
 // Pages: / (the Deal Ops overview), /toolkit/ and /inbox/; /inbox/demo/ is the Inbox's own demo package, checked against its lock.
 // - CSP rules in every page: one external script (/site.js), no inline script, no style attribute, no <style>, no inline events
 // - every local file a page or the stylesheet refers to exists; every anchor, on the page or on another page, has a target;
-//   links go only to the site's own pages, the Toolkit app, the two public repos and the GitHub organisation
-// - the footer is the same on every page and carries the Toolkit's disclaimer word for word
+//   links go only to the site's own pages, the Toolkit app, the two public repos, the GitHub organisation and the feedback form
+// - no page carries a mailto link or an e-mail address (the form replaces them; .example addresses are fine)
+// - the footer is the same on every page, links to the feedback form and carries the Toolkit's disclaimer word for word
 // - /toolkit/: the privacy and disclaimer sentences match the app word for word; FAQ rules; trust figures in the release notes
 // - /inbox/: every figure is in the Inbox release notes; quoted words are Inbox UI text, template text or demo data; the
 //   release notes' mailbox test-scope sentences are on the page word for word; FAQ rules
@@ -134,7 +135,16 @@ try {
 
 // ---- K1, K2: every page ----
 const EXTERNAL =
-  /^https:\/\/(vegeta-ops\.vercel\.app(\/|$)|deal-ops-toolkit\.vercel\.app(\/|$)|github\.com\/vegeta-labs\/(goten|trunks)(\/|$)|github\.com\/vegeta-labs$)|^mailto:haixiangyuann@gmail\.com$/
+  /^https:\/\/(vegeta-ops\.vercel\.app(\/|$)|deal-ops-toolkit\.vercel\.app(\/|$)|github\.com\/vegeta-labs\/(goten|trunks)(\/|$)|github\.com\/vegeta-labs$)/
+// encoded addresses display as real ones, so the address scan reads them decoded
+const decodeForScan = (t) =>
+  t
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Math.min(+n, 0x10ffff)))
+    .replace(/&#x([\da-f]+);/gi, (_, n) => String.fromCodePoint(Math.min(parseInt(n, 16), 0x10ffff)))
+    .replace(/&commat;/gi, '@')
+    .replace(/&period;/gi, '.')
+    .replace(/%40/g, '@')
+const FEEDBACK_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSd7sInr8uvQMiUPaVoDEmFGGu79NCoCVDUbqTYnYjxEr1VrDQ/viewform'
 const footers = new Set()
 for (const [url, h] of Object.entries(html)) {
   const at = (m) => `${url}: ${m}`
@@ -149,9 +159,9 @@ for (const [url, h] of Object.entries(html)) {
     if (/=\s*(?!")/.test(tag.replace(/"[^"]*"/g, '""'))) fail(at(`an attribute value is not double-quoted: ${tag.slice(0, 60)}`))
   const ids = idsOf(h)
   for (const d of new Set(ids.filter((v, i) => ids.indexOf(v) !== i))) fail(at(`duplicate id: ${d}`))
-  for (const [, ref] of h.matchAll(/\b(?:src|href|srcset)="([^"]+)"/gi)) {
+  for (const [, ref] of h.matchAll(/\b(?:src|href|srcset)\s*=\s*"([^"]+)"/gi)) {
     if (/^(https?:|mailto:)/.test(ref)) {
-      if (!EXTERNAL.test(ref)) fail(at(`unexpected external link: ${ref}`))
+      if (ref !== FEEDBACK_FORM && !EXTERNAL.test(ref)) fail(at(`unexpected external link: ${ref}`))
       continue
     }
     const [path, hash] = ref.split('#')
@@ -172,6 +182,10 @@ for (const [url, h] of Object.entries(html)) {
   // the footer is the same everywhere
   footers.add(/<footer[\s\S]*<\/footer>/.exec(h)?.[0] ?? '')
   const text = plain(h)
+  // readers reach the project through the form, so no address on any page; this file is public, so it names none either
+  const decoded = decodeForScan(h)
+  if (/mailto:/i.test(decoded)) fail(at('page has a mailto link'))
+  for (const [email] of decoded.matchAll(/[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g)) if (!email.endsWith('.example')) fail(at(`e-mail address on the page: ${email}`))
   // K6, K11: what no page may say
   for (const [re, what] of [
     ...PRIVATE_TERMS,
@@ -184,6 +198,7 @@ for (const [url, h] of Object.entries(html)) {
     if (re.test(text)) fail(at(`page mentions ${what}`))
 }
 if (footers.size !== 1) fail('the footer differs between pages')
+if (![...footers][0]?.includes(`<a href="${FEEDBACK_FORM}">Feedback</a>`)) fail('the footer has no Feedback link to the form')
 {
   const headers = Object.entries(html).map(([url, h]) => [url, /<header class="nav"[\s\S]*?<\/header>/.exec(h)?.[0] ?? ''])
   if (new Set(headers.map(([, h]) => h.replace(/\s+aria-current="page"/g, ''))).size !== 1) fail('the global nav differs between pages (plan 14 R1)')
